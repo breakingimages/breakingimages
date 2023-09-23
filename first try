@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Background Color and Rotating Image</title>
+    <style>
+        /* CSS for the body element, which sets the initial background color */
+        body {
+            background-color: #ADD8E6; /* Initial background color (white) */
+            transition: background-color 0.5s ease; /* Smooth transition effect */
+        }
+
+        /* CSS for the rotating image */
+        .rotating-image {
+            width: 200px; /* Adjust the width and height as needed */
+            height: 200px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: rotateImage 5s linear infinite; /* Adjust the duration as needed */
+        }
+
+        /* Keyframes for the image rotation */
+        @keyframes rotateImage {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HTML content -->
+    <div class="rotating-image">
+        <img src="imgur.com/HwsT4jO.png" alt="Rotating Image">
+    </div>
+
+    <!-- JavaScript to change the background color -->
+    <script>
+        // Function to change the background color
+        function changeBackgroundColor(color) {
+            document.body.style.backgroundColor = color;
+        }
+
+        // Example: Change the background color when a button is clicked
+        document.getElementById('changeColorButton').addEventListener('click', function() {
+            changeBackgroundColor('#ffcc00'); // Change the color to yellow (#ffcc00)
+        });
+    </script>
+
+    <!-- Button to trigger background color change -->
+    <button id="changeColorButton">Change Background Color</button>
+</body>
+</html>
