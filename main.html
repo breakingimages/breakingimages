@@ -55,7 +55,7 @@
             max-width: 100%; /* Ensure it doesn't exceed the parent container */
             height: auto; /* Allow the GIFs to resize proportionally */
             position: fixed;
-            z-index: -1; /* Place them behind other content */
+
         }
 
         .left-gif {
@@ -93,6 +93,42 @@
             width: 105%; /* Adjust the width for PNG 3 */
             max-width: 200%;
             height: 100%;
+        }
+
+        /* Footer Styles */
+        .footer {
+            background-color: #000000;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .footer-text {
+            font-size: 16px;
+        }
+
+        .footer-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .footer-link {
+            color: white;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        .footer-gifs {
+            display: flex;
+            align-items: center;
+        }
+
+        .footer-gif {
+            width: 50px; /* Adjust the width as needed */
+            height: auto;
+            margin-right: 10px; /* Add spacing between GIFs */
         }
     </style>
 </head>
@@ -135,6 +171,23 @@
         </div>
         <div class="png-container">
             <img src="https://i.imgur.com/dwDEBpt.png" alt="PNG 3" class="png-image-3">
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-text">
+        
+        </div>
+        <div class="footer-links">
+            <a href="https://www.instagram.com/breaking.images/">instagram</a>
+        </div>
+        <div class="footer-gifs">
+            <!-- First GIF -->
+            <img src="https://media.tenor.com/xEr2RjdHTF0AAAAi/zombie.gif" alt="First GIF" class="footer-gif">
+            
+            <!-- Second GIF -->
+            <img src="https://media.tenor.com/zniT3drVbKcAAAAC/gun.gif" alt="Second GIF" class="footer-gif">
         </div>
     </div>
 </body>
