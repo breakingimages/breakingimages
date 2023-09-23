@@ -13,28 +13,33 @@
             color: white;
         }
 
+        .container {
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
         .header {
-            width: 50%; /* Adjust the width as needed */
+            width: 75%; /* Adjust the width as needed */
             max-width: 100%; /* Ensure it doesn't exceed the parent container */
-            height: 30%; /* Allow the GIF to resize proportionally */
-            display: inline-block;
-            vertical-align: top;
+            height: auto; /* Allow the GIF to resize proportionally */
         }
 
         .image {
-            width: 50%; /* Adjust the width as needed */
+            width: 25%; /* Adjust the width as needed */
             max-width: 100%; /* Ensure it doesn't exceed the parent container */
-            height: 20%; /* Allow the PNG to resize proportionally */
-            display: inline-block;
-            vertical-align: top;
+            height: auto; /* Allow the PNG to resize proportionally */
         }
     </style>
 </head>
 <body>
-    <!-- Header GIF (replace 'header.gif' with your actual GIF file) -->
-    <img src="https://media3.giphy.com/media/qtMUc6sViWwsRwJi69/giphy.gif" alt="Header GIF" class="header">
+    <div class="container">
+        <!-- Header GIF (replace 'header.gif' with your actual GIF file) -->
+        <img src="https://media3.giphy.com/media/qtMUc6sViWwsRwJi69/giphy.gif" alt="Header GIF" class="header">
 
-    <!-- PNG Image (replace 'image.png' with your actual PNG file) -->
-    <img src="https://i.imgur.com/5NY9fKQ.png" alt="Resizable PNG Image" class="image">
+        <!-- PNG Image (replace 'image.png' with your actual PNG file) -->
+        <img src="https://i.imgur.com/5NY9fKQ.png" alt="Resizable PNG Image" class="image">
+    </div>
 </body>
 </html>
