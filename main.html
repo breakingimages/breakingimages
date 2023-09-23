@@ -67,6 +67,32 @@
             right: -1%;
             bottom: 40%;
         }
+
+        /* Individual PNG Styles */
+        .png-container {
+            width: 100%; /* Make the container full width */
+            display: flex;
+            justify-content: space-between; /* Distribute PNGs evenly */
+            margin-top: -10px; /* Add some spacing between PNGs and videos */
+        }
+
+        .png-image-1 {
+            width: 56%; /* Adjust the width for PNG 1 */
+            max-width: 100%;
+            height: auto;
+        }
+
+        .png-image-2 {
+            width: 100%; /* Adjust the width for PNG 2 */
+            max-width: 100%;
+            height: auto;
+        }
+
+        .png-image-3 {
+            width: 120%; /* Adjust the width for PNG 3 */
+            max-width: 200%;
+            height: 100%;
+        }
     </style>
 </head>
 <body>
@@ -95,6 +121,19 @@
     <div class="container">
         <div class="youtube-container">
             <iframe src="https://www.youtube.com/embed/omOCwJyG9Bg?si=3zyMRDFaJZNlQmCX" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- PNG Images -->
+    <div class="container">
+        <div class="png-container">
+            <img src="https://i.imgur.com/HwsT4jO.png" alt="PNG 1" class="png-image-1">
+        </div>
+        <div class="png-acontainer">
+            <img src="https://i.imgur.com/2YKp1WE.png" alt="PNG 2" class="png-image-2">
+        </div>
+        <div class="png-container">
+            <img src="https://i.imgur.com/dwDEBpt.png" alt="PNG 3" class="png-image-3">
         </div>
     </div>
 </body>
