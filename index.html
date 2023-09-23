@@ -5,20 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Matrix Binary Code Effect with Glitch and Fade</title>
     <style>
-        /* Apply CSS to the entire HTML and body to fill the viewport */
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            font-family: 'Courier New', monospace;
-            overflow: hidden;
-        }
-
         body {
+            margin: 0;
+            overflow: hidden;
             background-color: black;
-            font-size: 20px;
-            color: blue;
         }
 
         #matrix-container {
@@ -28,10 +18,13 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
+            color: blue;
         }
 
         .highlighted {
-            color: #FFFFFF; /* White color for highlighted digits */
+            color: #FFFFFF; /* Green color for highlighted digits */
         }
     </style>
 </head>
@@ -41,7 +34,7 @@
     <script>
         const matrixContainer = document.getElementById("matrix-container");
         const characters = "01";
-        const matrixWidth = 100;
+        const matrixWidth = 118;
         const matrixHeight = 100;
         const animationSpeed = 90;
         const wordToForm = "breaking images";
