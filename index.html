@@ -6,7 +6,7 @@
     <title>Matrix Binary Code Effect with Word Formation</title>
     <style>
         body {
-            margin: 0; /* Remove the default margin */
+            margin: 0;
             overflow: hidden;
             background-color: black;
         }
@@ -74,8 +74,17 @@
             matrixContainer.innerHTML = createMatrixText();
         }
 
+        // Function to fade away the matrix effect
+        function fadeMatrix() {
+            matrixContainer.style.opacity = '0';
+            clearInterval(animationInterval);
+        }
+
         // Start the animation
-        setInterval(updateMatrix, animationSpeed);
+        const animationInterval = setInterval(updateMatrix, animationSpeed);
+
+        // Add click event listener to fade the matrix on user click
+        document.body.addEventListener('click', fadeMatrix);
     </script>
 </body>
 </html>
