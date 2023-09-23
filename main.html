@@ -3,37 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rotating PNG Image</title>
+    <title>Resizable Header and Image</title>
     <style>
         body {
             margin: 0;
             padding: 0;
-            background-color: black; /* Set the background color to light blue */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh; /* Ensure the content takes up the full viewport height */
+            background-color: black; /* Set the background color to black */
+            font-family: Arial, sans-serif;
+            color: white;
         }
 
-        /* Define a class for the rotating image */
-        .rotating-image {
-            width: 200px; /* Adjust the width as needed */
-            animation: rotate 4s linear infinite; /* Apply the rotation animation */
+        .header {
+            width: 50%; /* Adjust the width as needed */
+            max-width: 100%; /* Ensure it doesn't exceed the parent container */
+            height: auto; /* Allow the GIF to resize proportionally */
+            display: inline-block;
+            vertical-align: top;
         }
 
-        /* Define the keyframes for the rotation animation */
-        @keyframes rotate {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
+        .image {
+            width: 50%; /* Adjust the width as needed */
+            max-width: 100%; /* Ensure it doesn't exceed the parent container */
+            height: auto; /* Allow the PNG to resize proportionally */
+            display: inline-block;
+            vertical-align: top;
         }
     </style>
 </head>
 <body>
-    <!-- Add the rotating PNG image -->
-    <img src="imgur.com/5NY9fKQ.png" alt="Rotating Image" class="rotating-image">
+    <!-- Header GIF (replace 'header.gif' with your actual GIF file) -->
+    <img src="https://media3.giphy.com/media/qtMUc6sViWwsRwJi69/giphy.gif" alt="Header GIF" class="header">
+
+    <!-- PNG Image (replace 'image.png' with your actual PNG file) -->
+    <img src="https://i.imgur.com/5NY9fKQ.png" alt="Resizable PNG Image" class="image">
 </body>
 </html>
