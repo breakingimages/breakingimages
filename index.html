@@ -3,25 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matrix Binary Effect</title>
+    <title>Matrix Binary Code Effect with Word Formation</title>
     <style>
         body {
             margin: 0;
             overflow: hidden;
+            background-color: black;
         }
 
         #matrix-container {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: black;
-            color: green;
-            font-family: 'Courier New', monospace;
-            font-size: 16px;
-            white-space: nowrap;
             overflow: hidden;
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
+            color: blue;
+        }
+
+        .highlighted {
+            color: #FFFFFF; /* Green color for highlighted digits */
         }
     </style>
 </head>
@@ -31,29 +34,48 @@
     <script>
         const matrixContainer = document.getElementById("matrix-container");
         const characters = "01";
-        const matrixLength = 200;
+        const matrixWidth = 100;
+        const matrixHeight = 100;
+        const animationSpeed = 90;
+        const wordToForm = "breaking images";
 
+        // Helper function to generate a random character
         function getRandomCharacter() {
             return characters[Math.floor(Math.random() * characters.length)];
         }
 
+        // Helper function to create a matrix row with word formation
+        function createMatrixRow() {
+            let matrixRow = "";
+            const wordStartIndex = Math.floor(Math.random() * (matrixWidth - wordToForm.length + 1));
+
+            for (let i = 0; i < matrixWidth; i++) {
+                if (i >= wordStartIndex && i < wordStartIndex + wordToForm.length) {
+                    // Highlighted characters for forming the word
+                    matrixRow += '<span class="highlighted">' + wordToForm[i - wordStartIndex] + '</span>';
+                } else {
+                    matrixRow += getRandomCharacter();
+                }
+            }
+            return matrixRow;
+        }
+
+        // Helper function to create the entire matrix text
         function createMatrixText() {
             let matrixText = "";
-            for (let i = 0; i < matrixLength; i++) {
-                matrixText += getRandomCharacter();
+            for (let i = 0; i < matrixHeight; i++) {
+                matrixText += createMatrixRow() + "<br>";
             }
             return matrixText;
         }
 
+        // Function to update the matrix periodically
         function updateMatrix() {
-            matrixContainer.textContent = createMatrixText();
+            matrixContainer.innerHTML = createMatrixText();
         }
 
-        function startMatrixAnimation() {
-            setInterval(updateMatrix, 50);
-        }
-
-        startMatrixAnimation();
+        // Start the animation
+        setInterval(updateMatrix, animationSpeed);
     </script>
 </body>
 </html>
