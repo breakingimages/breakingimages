@@ -3,56 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Background Color and Rotating Image</title>
+    <title>Matrix Binary Effect</title>
     <style>
-        /* CSS for the body element, which sets the initial background color */
         body {
-            background-color: #ADD8E6; /* Initial background color (white) */
-            transition: background-color 0.5s ease; /* Smooth transition effect */
+            margin: 0;
+            overflow: hidden;
         }
 
-        /* CSS for the rotating image */
-        .rotating-image {
-            width: 200px; /* Adjust the width and height as needed */
-            height: 200px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation: rotateImage 5s linear infinite; /* Adjust the duration as needed */
-        }
-
-        /* Keyframes for the image rotation */
-        @keyframes rotateImage {
-            from {
-                transform: translate(-50%, -50%) rotate(0deg);
-            }
-            to {
-                transform: translate(-50%, -50%) rotate(360deg);
-            }
+        #matrix-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            color: green;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            white-space: nowrap;
+            overflow: hidden;
         }
     </style>
 </head>
 <body>
-    <!-- HTML content -->
-    <div class="rotating-image">
-        <img src="https://images.unsplash.com/photo-1533450718592-29d45635f0a9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8anBnfGVufDB8fDB8fHww&w=1000&q=80" alt="Rotating Image">
-    </div>
+    <div id="matrix-container"></div>
 
-    <!-- JavaScript to change the background color -->
     <script>
-        // Function to change the background color
-        function changeBackgroundColor(color) {
-            document.body.style.backgroundColor = color;
+        const matrixContainer = document.getElementById("matrix-container");
+        const characters = "01";
+        const matrixLength = 200;
+
+        function getRandomCharacter() {
+            return characters[Math.floor(Math.random() * characters.length)];
         }
 
-        // Example: Change the background color when a button is clicked
-        document.getElementById('changeColorButton').addEventListener('click', function() {
-            changeBackgroundColor('#ffcc00'); // Change the color to yellow (#ffcc00)
-        });
-    </script>
+        function createMatrixText() {
+            let matrixText = "";
+            for (let i = 0; i < matrixLength; i++) {
+                matrixText += getRandomCharacter();
+            }
+            return matrixText;
+        }
 
-    <!-- Button to trigger background color change -->
-    <button id="changeColorButton">Change Background Color</button>
+        function updateMatrix() {
+            matrixContainer.textContent = createMatrixText();
+        }
+
+        function startMatrixAnimation() {
+            setInterval(updateMatrix, 50);
+        }
+
+        startMatrixAnimation();
+    </script>
 </body>
 </html>
