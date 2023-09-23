@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matrix Binary Code Effect with Glitch and Fade</title>
+    <title>Matrix Binary Code Effect with Glitch, Resize, and Fade</title>
     <style>
         body {
-            margin: -100;
+            margin: 0;
             overflow: hidden;
             background-color: black;
         }
@@ -23,8 +23,22 @@
             color: blue;
         }
 
+        .matrix-row {
+            display: flex;
+            justify-content: space-between;
+        }
+
         .highlighted {
             color: #FFFFFF; /* Green color for highlighted digits */
+        }
+
+        .glitch {
+            color: white; /* Change color to red during glitch */
+            transform: scale(1.2); /* Enlarge during glitch */
+        }
+
+        .resize {
+            font-size: 24px; /* Increase font size for the resized text */
         }
     </style>
 </head>
@@ -48,11 +62,12 @@
         function createMatrixRow() {
             let matrixRow = "";
             const wordStartIndex = Math.floor(Math.random() * (matrixWidth - wordToForm.length + 1));
+            const shouldResize = Math.random() < 0.2; // Adjust the probability for resizing
 
             for (let i = 0; i < matrixWidth; i++) {
                 if (i >= wordStartIndex && i < wordStartIndex + wordToForm.length) {
-                    // Highlighted characters for forming the word
-                    matrixRow += '<span class="highlighted">' + wordToForm[i - wordStartIndex] + '</span>';
+                    // Glitched characters (red and enlarged)
+                    matrixRow += '<span class="highlighted glitch' + (shouldResize ? ' resize' : '') + '">' + wordToForm[i - wordStartIndex] + '</span>';
                 } else {
                     matrixRow += getRandomCharacter();
                 }
@@ -64,7 +79,7 @@
         function createMatrixText() {
             let matrixText = "";
             for (let i = 0; i < matrixHeight; i++) {
-                matrixText += createMatrixRow() + "<br>";
+                matrixText += '<div class="matrix-row">' + createMatrixRow() + '</div>';
             }
             return matrixText;
         }
@@ -74,21 +89,17 @@
             matrixContainer.innerHTML = createMatrixText();
         }
 
-        // Function to glitch and fade the matrix
-        function glitchAndFade() {
-            matrixContainer.style.color = 'red'; // Glitch effect (change color to red)
-            setTimeout(() => {
-                matrixContainer.style.color = 'blue'; // Restore the color
-                matrixContainer.style.opacity = '0'; // Fade effect (change opacity to 0)
-                clearInterval(animationInterval);
-            }, 100);
+        // Function to glitch, resize, and fade the matrix
+        function glitchResizeAndFade() {
+            matrixContainer.style.opacity = '100'; // Fade effect (change opacity to 0)
+            clearInterval(animationInterval);
         }
 
         // Start the animation
         const animationInterval = setInterval(updateMatrix, animationSpeed);
 
-        // Add click event listener to glitch and fade the matrix on user click
-        document.body.addEventListener('click', glitchAndFade);
+        // Add click event listener to glitch, resize, and fade the matrix on user click
+        document.body.addEventListener('click', glitchResizeAndFade);
     </script>
 </body>
 </html>
