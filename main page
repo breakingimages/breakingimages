@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rotating PNG Image</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: lightblue; /* Set the background color to light blue */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Ensure the content takes up the full viewport height */
+        }
+
+        /* Define a class for the rotating image */
+        .rotating-image {
+            width: 200px; /* Adjust the width as needed */
+            animation: rotate 4s linear infinite; /* Apply the rotation animation */
+        }
+
+        /* Define the keyframes for the rotation animation */
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Add the rotating PNG image -->
+    <img src="imgur.com/5NY9fKQ.png" alt="Rotating Image" class="rotating-image">
+</body>
+</html>
