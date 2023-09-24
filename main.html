@@ -8,7 +8,7 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: black; /* Set the background color to black */
+            background-color: black;
             font-family: Arial, sans-serif;
             color: white;
         }
@@ -20,25 +20,19 @@
             justify-content: center;
         }
 
-        .header {
-            width: 50%; /* Adjust the width as needed */
-            max-width: 100%; /* Ensure it doesn't exceed the parent container */
-            height: auto; /* Allow the GIF to resize proportionally */
-        }
-
-        .image {
-            width: 50%; /* Adjust the width as needed */
-            max-width: 100%; /* Ensure it doesn't exceed the parent container */
-            height: auto; /* Allow the PNG to resize proportionally */
+        .header, .image {
+            width: 50%;
+            max-width: 100%;
+            height: auto;
         }
 
         .youtube-container {
-            width: 70%; /* Adjust the width as needed */
-            max-width: 100%; /* Ensure it doesn't exceed the parent container */
+            width: 70%;
+            max-width: 100%;
             height: 0;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio for YouTube videos */
+            padding-bottom: 56.25%;
             position: relative;
-            margin-top: 20px; /* Add some margin to separate from the header and image */
+            margin-top: 20px;
         }
 
         .youtube-container iframe {
@@ -49,53 +43,42 @@
             height: 100%;
         }
 
-        /* Left and Right GIFs */
         .left-gif, .right-gif {
-            width: 15%; /* Adjust the width as needed */
-            max-width: 100%; /* Ensure it doesn't exceed the parent container */
-            height: auto; /* Allow the GIFs to resize proportionally */
+            width: 15%;
+            max-width: 100%;
+            height: auto;
             position: fixed;
-
+            bottom: 40%;
         }
 
         .left-gif {
             left: -1%;
-            bottom: 40%;
         }
 
         .right-gif {
             right: -1%;
-            bottom: 40%;
         }
 
-        /* Individual PNG Styles */
         .png-container {
-            width: 100%; /* Make the container full width */
+            width: 100%;
             display: flex;
-            justify-content: space-between; /* Distribute PNGs evenly */
-            margin-top: -10px; /* Add some spacing between PNGs and videos */
+            justify-content: space-between;
+            margin-top: -10px;
         }
 
         .png-image-1 {
-            width: 60%; /* Adjust the width for PNG 1 */
+            width: 60%;
             max-width: 100%;
             height: 100%;
-            margin: 0 auto; /* Center the image */
+            margin: 0 auto;
         }
 
-        .png-image-2 {
-            width: 110%; /* Adjust the width for PNG 2 */
+        .png-image-2, .png-image-3 {
+            width: 105%;
             max-width: 200%;
             height: auto;
         }
 
-        .png-image-3 {
-            width: 105%; /* Adjust the width for PNG 3 */
-            max-width: 200%;
-            height: 100%;
-        }
-
-        /* Footer Styles */
         .footer {
             background-color: #000000;
             color: white;
@@ -103,16 +86,7 @@
             text-align: center;
             display: flex;
             justify-content: space-between;
-        }
-
-        .footer-text {
-            font-size: 16px;
-        }
-
-        .footer-links {
-            display: flex;
             align-items: center;
-            font-size: 30px;
         }
 
         .footer-link {
@@ -121,54 +95,39 @@
             margin-right: 20px;
         }
 
-        .footer-gifs {
-            display: flex;
-            align-items: center;
-        }
-
-        /* Make the footer GIFs twice as large */
         .footer-gif {
             width: 100px;
             height: auto;
-            margin-right: 10px; /* Add spacing between GIFs */
+            margin-right: 10px;
         }
     </style>
 </head>
 <body>
-    <!-- Left GIF -->
     <img src="https://s10.gifyu.com/images/S4Vhc.gif" alt="Left GIF" class="left-gif">
-
-    <!-- Right GIF -->
     <img src="https://s10.gifyu.com/images/S4Vhc.gif" alt="Right GIF" class="right-gif">
 
     <div class="container">
-        <!-- Header GIF (replace 'header.gif' with your actual GIF file) -->
         <img src="https://media3.giphy.com/media/qtMUc6sViWwsRwJi69/giphy.gif" alt="Header GIF" class="header">
-
-        <!-- PNG Image (replace 'image.png' with your actual PNG file) -->
         <img src="https://i.imgur.com/5NY9fKQ.png" alt="Resizable PNG Image" class="image">
     </div>
 
-    <!-- YouTube Player 1 -->
     <div class="container">
         <div class="youtube-container">
             <iframe src="https://www.youtube.com/embed/dKlpKE7x7mY" frameborder="0" allowfullscreen></iframe>
         </div>
     </div>
 
-    <!-- YouTube Player 2 -->
     <div class="container">
         <div class="youtube-container">
             <iframe src="https://www.youtube.com/embed/omOCwJyG9Bg?si=3zyMRDFaJZNlQmCX" frameborder="0" allowfullscreen></iframe>
         </div>
     </div>
 
-    <!-- PNG Images -->
     <div class="container">
         <div class="png-container">
             <img src="https://i.imgur.com/HwsT4jO.png" alt="PNG 1" class="png-image-1">
         </div>
-        <div class="png-acontainer">
+        <div class="png-container">
             <img src="https://i.imgur.com/2YKp1WE.png" alt="PNG 2" class="png-image-2">
         </div>
         <div class="png-container">
@@ -176,19 +135,12 @@
         </div>
     </div>
 
-    <!-- Footer -->
     <div class="footer">
-        <div class="footer-text">
-        
-        </div>
         <div class="footer-links">
             <a href="https://www.instagram.com/breaking.images/">instagram</a>
         </div>
         <div class="footer-gifs">
-            <!-- First GIF -->
             <img src="https://media.tenor.com/xEr2RjdHTF0AAAAi/zombie.gif" alt="First GIF" class="footer-gif">
-            
-            <!-- Second GIF -->
             <img src="https://media.tenor.com/zniT3drVbKcAAAAC/gun.gif" alt="Second GIF" class="footer-gif">
         </div>
     </div>
