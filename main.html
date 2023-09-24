@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>breaking images</title>
+    <title>Breaking Images</title>
     <style>
         body {
             margin: 0;
@@ -11,10 +11,12 @@
             background-color: black;
             font-family: Arial, sans-serif;
             color: white;
+            min-height: 100vh; /* Ensure a minimum height equal to the viewport height */
         }
 
         .container {
             width: 100%;
+            max-width: 100%;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
@@ -100,10 +102,67 @@
             height: auto;
             margin-right: 10px;
         }
+
+        /* Shard-like Particle Styles */
+        .particle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: url('https://i.imgur.com/NEu5L6O.png'); /* Replace with your particle image URL */
+            background-size: cover;
+            pointer-events: none;
+            animation: particleAnimation 1s ease-out forwards;
+        }
+
+        @keyframes particleAnimation {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100px);
+            }
+        }
+
+        /* Custom Cursor Trail Styles */
+        .custom-cursor {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: url('https://i.imgur.com/NEu5L6O.png'); /* Replace with your custom cursor GIF URL */
+            background-size: cover;
+            pointer-events: none;
+            z-index: 9999; /* Ensure it's above other elements */
+        }
+
+        /* Cursor Trail Animation */
+        .cursor-trail {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: url('https://i.imgur.com/NEu5L6O.png'); /* Replace with your trail image URL */
+            background-size: cover;
+            pointer-events: none;
+            animation: cursorAnimation 0.0s ease-in-out infinite alternate; /* Add a subtle animation */
+        }
+
+        @keyframes cursorAnimation {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1.2);
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Left GIF -->
     <img src="https://s10.gifyu.com/images/S4Vhc.gif" alt="Left GIF" class="left-gif">
+    <!-- Right GIF -->
     <img src="https://s10.gifyu.com/images/S4Vhc.gif" alt="Right GIF" class="right-gif">
 
     <div class="container">
@@ -144,5 +203,34 @@
             <img src="https://media.tenor.com/zniT3drVbKcAAAAC/gun.gif" alt="Second GIF" class="footer-gif">
         </div>
     </div>
+
+    <!-- Custom Cursor -->
+    <div class="custom-cursor"></div>
+
+    <!-- Cursor Trail -->
+    <div class="cursor-trail"></div>
+
+    <script>
+        const customCursor = document.querySelector('.custom-cursor');
+        const cursorTrail = document.querySelector('.cursor-trail');
+
+        document.addEventListener("mousemove", (e) => {
+            // Update the custom cursor position
+            customCursor.style.left = `${e.pageX}px`;
+            customCursor.style.top = `${e.pageY}px`;
+
+            // Create and append a cursor trail element
+            const trailElement = document.createElement('div');
+            trailElement.className = 'cursor-trail';
+            trailElement.style.left = `${e.pageX}px`;
+            trailElement.style.top = `${e.pageY}px`;
+            document.body.appendChild(trailElement);
+
+            // Remove the trail element after a short delay (e.g., 1 second)
+            setTimeout(() => {
+                document.body.removeChild(trailElement);
+            }, 600);
+        });
+    </script>
 </body>
 </html>
