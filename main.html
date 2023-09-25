@@ -82,19 +82,26 @@
         }
 
         .footer {
-            background-color: #000000;
+            background-color: transparent; /* Set the background to transparent */
             color: white;
-            padding: 20px;
+            padding: 150px;
             text-align: center;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column; /* Stack the items vertically */
+            justify-content: center; /* Center items horizontally */
+            align-items: center; /* Center items vertically */
+            position: relative; /* Ensure the absolute positioning works */
+        }
+
+        .footer-links {
+            margin-right: 0; /* Reset the right margin */
+            margin-bottom:50px;
         }
 
         .footer-link {
             color: white;
             text-decoration: none;
-            margin-right: 20px;
+            margin: 0; /* Reset margin for the link */
         }
 
         .footer-gif {
@@ -108,7 +115,7 @@
             position: absolute;
             width: 20px;
             height: 20px;
-            background: url('https://i.imgur.com/q9bC16B.png'); /* Replace with your particle image URL */
+            background: url('https://i.imgur.com/NEu5L6O.png'); /* Replace with your particle image URL */
             background-size: cover;
             pointer-events: none;
             animation: particleAnimation 1s ease-out forwards;
@@ -130,7 +137,7 @@
             position: absolute;
             width: 20px;
             height: 20px;
-            background: url('https://your-cursor-image.gif'); /* Replace with your custom cursor GIF URL */
+            background: url('https://i.imgur.com/NEu5L6O.png'); /* Replace with your custom cursor GIF URL */
             background-size: cover;
             pointer-events: none;
             z-index: 9999; /* Ensure it's above other elements */
@@ -196,7 +203,7 @@
 
     <div class="footer">
         <div class="footer-links">
-            <a href="https://www.instagram.com/breaking.images/">instagram</a>
+            <a href="https://www.instagram.com/breaking.images/" class="footer-link" style="color: #2f74d2; font-family: 'Courier', sans-serif;">instagram</a>
         </div>
         <div class="footer-gifs">
             <img src="https://media.tenor.com/xEr2RjdHTF0AAAAi/zombie.gif" alt="First GIF" class="footer-gif">
@@ -232,5 +239,6 @@
             }, 600);
         });
     </script>
+     <script id="cid0020000356613653150" data-cfasync="false" async src="//st.chatango.com/js/gz/emb.js" style="width: 230px;height: 375px;">{"handle":"breakingimgs","arch":"js","styles":{"a":"000000","b":100,"c":"2f74d2","d":"2f74d2","e":"000000","g":"2f74d2","h":"2f74d2","k":"000000","l":"000000","m":"000000","n":"FFFFFF","p":"10","q":"000000","r":100,"t":0,"ab":false,"usricon":0,"pos":"bl","cv":1,"cvfnt":"monospace, sans-serif","cvfntw":"bolder","cvbg":"000000","cvfg":"2f74d2","cvw":206,"cvh":70,"sbc":"2f74d2","surl":0,"ticker":1,"fwtickm":1}}</script>
 </body>
 </html>
