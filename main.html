@@ -109,13 +109,14 @@
             height: auto;
             margin-right: 10px;
         }
+    
 
         /* Shard-like Particle Styles */
         .particle {
             position: absolute;
-            width: 20px;
-            height: 20px;
-            background: url('https://i.imgur.com/NEu5L6O.png'); /* Replace with your particle image URL */
+            width: 60px;
+            height: 60px;
+            background: url('https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExczFzNG1uMGYxZzN5b2locDdlemYzNWoyczg5dXRmYmFrdnVlcmVuZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/EUn4opNv8im6nQ0IGp/giphy.gif'); /* Replace with your particle image URL */
             background-size: cover;
             pointer-events: none;
             animation: particleAnimation 1s ease-out forwards;
@@ -134,10 +135,11 @@
 
         /* Custom Cursor Trail Styles */
         .custom-cursor {
+            
             position: absolute;
-            width: 20px;
-            height: 20px;
-            background: url('https://i.imgur.com/NEu5L6O.png'); /* Replace with your custom cursor GIF URL */
+            width: 80px;
+            height: 80px;
+            background: url('https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExczFzNG1uMGYxZzN5b2locDdlemYzNWoyczg5dXRmYmFrdnVlcmVuZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/EUn4opNv8im6nQ0IGp/giphy.gif'); /* Replace with your custom cursor GIF URL */
             background-size: cover;
             pointer-events: none;
             z-index: 9999; /* Ensure it's above other elements */
@@ -146,12 +148,12 @@
         /* Cursor Trail Animation */
         .cursor-trail {
             position: absolute;
-            width: 20px;
-            height: 20px;
-            background: url('https://i.imgur.com/NEu5L6O.png'); /* Replace with your trail image URL */
+            width: 80px;
+            height: 80px;
+            background: url('https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExczFzNG1uMGYxZzN5b2locDdlemYzNWoyczg5dXRmYmFrdnVlcmVuZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/EUn4opNv8im6nQ0IGp/giphy.gif'); /* Replace with your trail image URL */
             background-size: cover;
             pointer-events: none;
-            animation: cursorAnimation 0.0s ease-in-out infinite alternate; /* Add a subtle animation */
+            animation: cursorAnimation 0s ease-in-out infinite alternate; /* Add a subtle animation */
         }
 
         @keyframes cursorAnimation {
@@ -240,5 +242,71 @@
         });
     </script>
      <script id="cid0020000356613653150" data-cfasync="false" async src="//st.chatango.com/js/gz/emb.js" style="width: 230px;height: 375px;">{"handle":"breakingimgs","arch":"js","styles":{"a":"000000","b":100,"c":"2f74d2","d":"2f74d2","e":"000000","g":"2f74d2","h":"2f74d2","k":"000000","l":"000000","m":"000000","n":"FFFFFF","p":"10","q":"000000","r":100,"t":0,"ab":false,"usricon":0,"pos":"bl","cv":1,"cvfnt":"monospace, sans-serif","cvfntw":"bolder","cvbg":"000000","cvfg":"2f74d2","cvw":206,"cvh":70,"sbc":"2f74d2","surl":0,"ticker":1,"fwtickm":1}}</script>
+     
+<html lang="en">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breaking Images</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            font-family: Arial, sans-serif;
+            color: white;
+            min-height: 100vh; /* Ensure a minimum height equal to the viewport height */
+            cursor: none; /* Hide the default cursor */
+        }
+
+        /* Rest of your CSS styles... */
+
+        /* Custom Cursor Styles */
+        .custom-cursor {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: url('https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExczFzNG1uMGYxZzN5b2locDdlemYzNWoyczg5dXRmYmFrdnVlcmVuZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/EUn4opNv8im6nQ0IGp/giphy.gif'); /* Replace with your custom cursor GIF URL */
+            background-size: cover;
+            pointer-events: none;
+            z-index: 9999; /* Ensure it's above other elements */
+            display: none; /* Initially hide the custom cursor */
+        }
+    </style>
+
+    <!-- Your HTML content... -->
+
+    <!-- Custom Cursor -->
+    <div class="custom-cursor"></div>
+
+    <script>
+        const customCursor = document.querySelector('.custom-cursor');
+
+        // Hide the custom cursor initially
+        customCursor.style.display = 'none';
+
+        document.addEventListener("mousemove", (e) => {
+            // Update the custom cursor position
+            customCursor.style.left = `${e.pageX - 40}px`; // Adjust position to center the cursor
+            customCursor.style.top = `${e.pageY - 40}px`; // Adjust position to center the cursor
+
+            // Show the custom cursor
+            customCursor.style.display = 'block';
+
+            // Hide the default cursor
+            document.body.style.cursor = 'none';
+        });
+
+        // Optionally, you can hide the custom cursor when the mouse leaves the document
+        document.addEventListener("mouseout", () => {
+            customCursor.style.display = 'none';
+
+            // Restore the default cursor
+            document.body.style.cursor = 'auto';
+        });
+    </script>
+</body>
+</html>
+
 </body>
 </html>
