@@ -1,6 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>breaking images</title>
+    <style>
+        /* Your CSS styles for the container go here */
+        .custom-container {
+            background-color: transparent;
+            padding: 0px;
+            border: 0px solid #333;
+            position: fixed;
+            z-index: 0;
+        }
+
+        /* Add more CSS styles for your container if needed */
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .fade-out {
+            animation: fadeOut 3s linear forwards;
+        }
+    </style>
+</head>
+<body>
+    <!-- Your HTML content goes here -->
+    <div class="custom-container" style="width: 100px; height: 100px;">
+        <!-- Your Matrix digital rain code goes here -->
+        <canvas id="Matrix"></canvas>
+        <script>
+            const canvas = document.getElementById('Matrix');
+            const context = canvas.getContext('2d');
+
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+            const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const nums = '0123456789';
+
+            const alphabet = katakana + latin + nums;
+
+            const fontSize = 16;
+            const columns = canvas.width / fontSize;
+
+            const rainDrops = [];
+
+            for (let x = 0; x < columns; x++) {
+                rainDrops[x] = 1;
+            }
+
+            const draw = () => {
+                context.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                context.fillRect(0, 0, canvas.width, canvas.height);
+
+                context.fillStyle = '#2f74d2';
+                context.font = fontSize + 'px monospace';
+
+                for (let i = 0; i < rainDrops.length; i++) {
+                    const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                    context.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+
+                    if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        rainDrops[i] = 0;
+                    }
+                    rainDrops[i]++;
+                }
+            };
+
+            // Start the animation interval
+            const animationInterval = setInterval(draw, 30);
+
+            // Set a timeout to add the fade-out class after 3 seconds
+            setTimeout(() => {
+                canvas.classList.add('fade-out');
+            }, 3000);
+        </script>
+    </div>
+</body>
+</html>
+
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Breaking Images</title>
@@ -26,6 +115,8 @@
             width: 50%;
             max-width: 100%;
             height: auto;
+            z-index:999;
+            
         }
 
         .youtube-container {
@@ -51,6 +142,7 @@
             height: auto;
             position: fixed;
             bottom: 40%;
+            z-index: -1;
         }
 
         .left-gif {
@@ -66,6 +158,7 @@
             display: flex;
             justify-content: space-between;
             margin-top: -10px;
+            z-index:999;
         }
 
         .png-image-1 {
@@ -73,12 +166,16 @@
             max-width: 100%;
             height: 100%;
             margin: 0 auto;
+            z-index:999;
         }
 
-        .png-image-2, .png-image-3 {
-            width: 105%;
+        .png-image-2,
+            
+        .png-image-3 {
+            width: 110%;
             max-width: 200%;
             height: auto;
+            z-index:999;
         }
 
         .footer {
@@ -100,14 +197,16 @@
 
         .footer-link {
             color: white;
-            text-decoration: none;
+            text-decoration: underline;
             margin: 0; /* Reset margin for the link */
+            z-index:1000;
         }
 
         .footer-gif {
             width: 100px;
             height: auto;
             margin-right: 10px;
+            
         }
     
 
@@ -167,16 +266,15 @@
             }
         }
     </style>
-</head>
-<body>
+
     <!-- Left GIF -->
     <img src="https://s10.gifyu.com/images/S4Vhc.gif" alt="Left GIF" class="left-gif">
     <!-- Right GIF -->
     <img src="https://s10.gifyu.com/images/S4Vhc.gif" alt="Right GIF" class="right-gif">
 
     <div class="container">
-        <img src="https://media3.giphy.com/media/qtMUc6sViWwsRwJi69/giphy.gif" alt="Header GIF" class="header">
-        <img src="https://i.imgur.com/5NY9fKQ.png" alt="Resizable PNG Image" class="image">
+        <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZTByZXNnNnhhOWhoZ3lkNTBzNzNwdGV3YTdlMGF4MGNoZDh5ZGphZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/C5vR7fyscDw5iGew4I/giphy.gif" alt="Header GIF" class="header">
+        <img src="https://i.imgur.com/XcFRby5.png" alt="Resizable PNG Image" class="image">
     </div>
 
     <div class="container">
@@ -193,13 +291,13 @@
 
     <div class="container">
         <div class="png-container">
-            <img src="https://i.imgur.com/HwsT4jO.png" alt="PNG 1" class="png-image-1">
+            <img src="https://i.imgur.com/5nf0rye.png" alt="PNG 1" class="png-image-1">
         </div>
         <div class="png-container">
-            <img src="https://i.imgur.com/2YKp1WE.png" alt="PNG 2" class="png-image-2">
+            <img src="https://i.imgur.com/q53QJJw.png" alt="PNG 2" class="png-image-2">
         </div>
         <div class="png-container">
-            <img src="https://i.imgur.com/dwDEBpt.png" alt="PNG 3" class="png-image-3">
+            <img src="https://i.imgur.com/V68Hqi8.png" alt="PNG 3" class="png-image-3">
         </div>
     </div>
 
@@ -209,7 +307,7 @@
         </div>
         <div class="footer-gifs">
             <img src="https://media.tenor.com/xEr2RjdHTF0AAAAi/zombie.gif" alt="First GIF" class="footer-gif">
-            <img src="https://media.tenor.com/zniT3drVbKcAAAAC/gun.gif" alt="Second GIF" class="footer-gif">
+            <img src="https://media1.giphy.com/media/pFwlfzU2UuTQllQGWB/giphy.gif" alt="Second GIF" class="footer-gif">
         </div>
     </div>
 
