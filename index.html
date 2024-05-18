@@ -3,55 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>What's Your Biggest Fear?</title>
+    <title>ENTER</title>
     <style>
         body {
-            background-color: black;
-            color: red; /* Font color */
-            font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
+            overflow: hidden;
+            background-color: black;
         }
-        .container {
-            max-width: 600px;
-            margin: 50px auto;
-            text-align: center;
+
+        #matrix-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
+            color: blue;
         }
-        h2 {
-            font-family: 'Metal Mania', cursive; /* Heavy metal font */
-            font-size: 36px;
-        }
-        input[type="text"] {
-            width: 60%;
-            padding: 8px;
-            margin-top: 10px;
-            box-sizing: border-box;
-            border: 2px solid #999;
-            background-color: white;
-            font-family: Courier New, monospace;
-            font-size: 14px;
-            color: black;
-            outline: none; /* Removes the default blue outline on focus */
+
+        .highlighted {
+            color: #FFFFFF; /* Green color for highlighted digits */
         }
     </style>
-    <!-- Link to Google Fonts for Metal Mania -->
-    <link href="https://fonts.googleapis.com/css2?family=Metal+Mania&display=swap" rel="stylesheet">
-    <script>
-        function redirectToAnotherPage(event) {
-            if (event.key === "Enter") {
-                var userInput = event.target.value.trim();
-                if (userInput !== "") {
-                    window.location.href = "another-page.html"; // Replace with the URL of the page you want to redirect to
-                }
-            }
-        }
-    </script>
 </head>
 <body>
-    <div class="container">
-        <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHFxcG9oM3FkZm4wNGVrYXRsbXE4cmtrbjA3eXZ6emgyMTE0eng2biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/x5nkVK0hK7pXaYP5Bb/giphy.gif" alt="GIF" width="200">
-        <h2>What are you afraid of?</h2>
-        <input type="text" placeholder="Answer if you dare..." onkeypress="redirectToAnotherPage(event)">
-    </div>
+    <div id="matrix-container"></div>
+
+    <script>
+        const matrixContainer = document.getElementById("matrix-container");
+        const characters = "01";
+        const matrixWidth = 118;
+        const matrixHeight = 100;
+        const animationSpeed = 90;
+        const wordToForm = "breaking images";
+
+        // Helper function to generate a random character
+        function getRandomCharacter() {
+            return characters[Math.floor(Math.random() * characters.length)];
+        }
+
+        // Helper function to create a matrix row with word formation
+        function createMatrixRow() {
+            let matrixRow = "";
+            const wordStartIndex = Math.floor(Math.random() * (matrixWidth - wordToForm.length + 1));
+
+            for (let i = 0; i < matrixWidth; i++) {
+                if (i >= wordStartIndex && i < wordStartIndex + wordToForm.length) {
+                    // Highlighted characters for forming the word
+                    matrixRow += '<span class="highlighted">' + wordToForm[i - wordStartIndex] + '</span>';
+                } else {
+                    matrixRow += getRandomCharacter();
+                }
+            }
+            return matrixRow;
+        }
+
+        // Helper function to create the entire matrix text
+        function createMatrixText() {
+            let matrixText = "";
+            for (let i = 0; i < matrixHeight; i++) {
+                matrixText += createMatrixRow() + "<br>";
+            }
+            return matrixText;
+        }
+
+        // Function to update the matrix periodically
+        function updateMatrix() {
+            matrixContainer.innerHTML = createMatrixText();
+        }
+
+        // Function to glitch and fade the matrix
+        function glitchAndFade() {
+            matrixContainer.style.color = 'red'; // Glitch effect (change color to red)
+            setTimeout(() => {
+                matrixContainer.style.color = 'blue'; // Restore the color
+                matrixContainer.style.opacity = '0'; // Fade effect (change opacity to 0)
+                clearInterval(animationInterval);
+
+                // Redirect to another HTML file on the same domain
+                window.location.href = '/main.html'; // Replace 'another-page.html' with your desired URL
+            }, 100);
+        }
+
+        // Start the animation
+        const animationInterval = setInterval(updateMatrix, animationSpeed);
+
+        // Add click event listener to glitch and fade the matrix on user click
+        document.body.addEventListener('click', glitchAndFade);
+    </script>
 </body>
 </html>
+
