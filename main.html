@@ -1,57 +1,412 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>What's Your Biggest Fear?</title>
+    <title>breaking images</title>
     <style>
-        body {
-            background-color: black;
-            color: red; /* Font color */
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
+        /* Your CSS styles for the container go here */
+        .custom-container {
+            background-color: transparent;
+            padding: 0px;
+            border: 0px solid #333;
+            position: fixed;
+            z-index: 0;
         }
-        .container {
-            max-width: 600px;
-            margin: 50px auto;
-            text-align: center;
-        }
-        h2 {
-            font-family: 'Metal Mania', cursive; /* Heavy metal font */
-            font-size: 36px;
-        }
-        input[type="text"] {
-            width: 60%;
-            padding: 8px;
-            margin-top: 10px;
-            box-sizing: border-box;
-            border: 2px solid #999;
-            background-color: white;
-            font-family: Courier New, monospace;
-            font-size: 14px;
-            color: black;
-            outline: none; /* Removes the default blue outline on focus */
-        }
-    </style>
-    <!-- Link to Google Fonts for Metal Mania -->
-    <link href="https://fonts.googleapis.com/css2?family=Metal+Mania&display=swap" rel="stylesheet">
-    <script>
-        function redirectToAnotherPage(event) {
-            if (event.key === "Enter") {
-                var userInput = event.target.value.trim();
-                if (userInput !== "") {
-                    window.location.href = "another-page.html"; // Replace with the URL of the page you want to redirect to
-                }
+
+        /* Add more CSS styles for your container if needed */
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
             }
         }
-    </script>
+
+        .fade-out {
+            animation: fadeOut 3s linear forwards;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHFxcG9oM3FkZm4wNGVrYXRsbXE4cmtrbjA3eXZ6emgyMTE0eng2biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/x5nkVK0hK7pXaYP5Bb/giphy.gif" alt="GIF" width="200">
-        <h2>What are you afraid of?</h2>
-        <input type="text" placeholder="Answer if you dare..." onkeypress="redirectToAnotherPage(event)">
+    <!-- Your HTML content goes here -->
+    <div class="custom-container" style="width: 100px; height: 100px;">
+        <!-- Your Matrix digital rain code goes here -->
+        <canvas id="Matrix"></canvas>
+        <script>
+            const canvas = document.getElementById('Matrix');
+            const context = canvas.getContext('2d');
+
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+            const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const nums = '0123456789';
+
+            const alphabet = katakana + latin + nums;
+
+            const fontSize = 16;
+            const columns = canvas.width / fontSize;
+
+            const rainDrops = [];
+
+            for (let x = 0; x < columns; x++) {
+                rainDrops[x] = 1;
+            }
+
+            const draw = () => {
+                context.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                context.fillRect(0, 0, canvas.width, canvas.height);
+
+                context.fillStyle = '#2f74d2';
+                context.font = fontSize + 'px monospace';
+
+                for (let i = 0; i < rainDrops.length; i++) {
+                    const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                    context.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+
+                    if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        rainDrops[i] = 0;
+                    }
+                    rainDrops[i]++;
+                }
+            };
+
+            // Start the animation interval
+            const animationInterval = setInterval(draw, 30);
+
+            // Set a timeout to add the fade-out class after 3 seconds
+            setTimeout(() => {
+                canvas.classList.add('fade-out');
+            }, 3000);
+        </script>
     </div>
 </body>
 </html>
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breaking Images</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            font-family: Arial, sans-serif;
+            color: white;
+            min-height: 100vh; /* Ensure a minimum height equal to the viewport height */
+        }
+
+        .container {
+            width: 100%;
+            max-width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .header, .image {
+            width: 50%;
+            max-width: 100%;
+            height: auto;
+            z-index:999;
+            
+        }
+
+        .youtube-container {
+            width: 70%;
+            max-width: 100%;
+            height: 0;
+            padding-bottom: 56.25%;
+            position: relative;
+            margin-top: 20px;
+        }
+
+        .youtube-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .left-gif, .right-gif {
+            width: 15%;
+            max-width: 100%;
+            height: auto;
+            position: fixed;
+            bottom: 40%;
+            z-index: -1;
+        }
+
+        .left-gif {
+            left: -1%;
+        }
+
+        .right-gif {
+            right: -1%;
+        }
+
+        .png-container {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin-top: -10px;
+            z-index:999;
+        }
+
+        .png-image-1 {
+            width: 60%;
+            max-width: 100%;
+            height: 100%;
+            margin: 0 auto;
+            z-index:999;
+        }
+
+        .png-image-2,
+            
+        .png-image-3 {
+            width: 110%;
+            max-width: 200%;
+            height: auto;
+            z-index:999;
+        }
+
+        .footer {
+            background-color: transparent; /* Set the background to transparent */
+            color: white;
+            padding: 150px;
+            text-align: center;
+            display: flex;
+            flex-direction: column; /* Stack the items vertically */
+            justify-content: center; /* Center items horizontally */
+            align-items: center; /* Center items vertically */
+            position: relative; /* Ensure the absolute positioning works */
+        }
+
+        .footer-links {
+            margin-right: 0; /* Reset the right margin */
+            margin-bottom:50px;
+        }
+
+        .footer-link {
+            color: white;
+            text-decoration: underline;
+            margin: 0; /* Reset margin for the link */
+            z-index:1000;
+        }
+
+        .footer-gif {
+            width: 100px;
+            height: auto;
+            margin-right: 10px;
+            
+        }
+    
+
+        /* Shard-like Particle Styles */
+        .particle {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: url('https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExczFzNG1uMGYxZzN5b2locDdlemYzNWoyczg5dXRmYmFrdnVlcmVuZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/EUn4opNv8im6nQ0IGp/giphy.gif'); /* Replace with your particle image URL */
+            background-size: cover;
+            pointer-events: none;
+            animation: particleAnimation 1s ease-out forwards;
+        }
+
+        @keyframes particleAnimation {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100px);
+            }
+        }
+
+        /* Custom Cursor Trail Styles */
+        .custom-cursor {
+            
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: url('https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExczFzNG1uMGYxZzN5b2locDdlemYzNWoyczg5dXRmYmFrdnVlcmVuZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/EUn4opNv8im6nQ0IGp/giphy.gif'); /* Replace with your custom cursor GIF URL */
+            background-size: cover;
+            pointer-events: none;
+            z-index: 9999; /* Ensure it's above other elements */
+        }
+
+        /* Cursor Trail Animation */
+        .cursor-trail {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: url('https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExczFzNG1uMGYxZzN5b2locDdlemYzNWoyczg5dXRmYmFrdnVlcmVuZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/EUn4opNv8im6nQ0IGp/giphy.gif'); /* Replace with your trail image URL */
+            background-size: cover;
+            pointer-events: none;
+            animation: cursorAnimation 0s ease-in-out infinite alternate; /* Add a subtle animation */
+        }
+
+        @keyframes cursorAnimation {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1.2);
+            }
+        }
+    </style>
+
+    <!-- Left GIF -->
+    <img src="https://s10.gifyu.com/images/S4Vhc.gif" alt="Left GIF" class="left-gif">
+    <!-- Right GIF -->
+    <img src="https://s10.gifyu.com/images/S4Vhc.gif" alt="Right GIF" class="right-gif">
+
+    <div class="container">
+        <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZTByZXNnNnhhOWhoZ3lkNTBzNzNwdGV3YTdlMGF4MGNoZDh5ZGphZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/C5vR7fyscDw5iGew4I/giphy.gif" alt="Header GIF" class="header">
+        <img src="https://i.imgur.com/XcFRby5.png" alt="Resizable PNG Image" class="image">
+    </div>
+
+    <div class="container">
+        <div class="youtube-container">
+            <iframe src="https://www.youtube.com/embed/dKlpKE7x7mY" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="youtube-container">
+            <iframe src="https://www.youtube.com/embed/omOCwJyG9Bg?si=3zyMRDFaJZNlQmCX" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="png-container">
+            <img src="https://i.imgur.com/5nf0rye.png" alt="PNG 1" class="png-image-1">
+        </div>
+        <div class="png-container">
+            <img src="https://i.imgur.com/q53QJJw.png" alt="PNG 2" class="png-image-2">
+        </div>
+        <div class="png-container">
+            <img src="https://i.imgur.com/V68Hqi8.png" alt="PNG 3" class="png-image-3">
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-links">
+            <a href="https://www.instagram.com/breaking.images/" class="footer-link" style="color: #2f74d2; font-family: 'Courier', sans-serif;">instagram</a>
+        </div>
+        <div class="footer-gifs">
+            <img src="https://media.tenor.com/xEr2RjdHTF0AAAAi/zombie.gif" alt="First GIF" class="footer-gif">
+            <img src="https://media1.giphy.com/media/pFwlfzU2UuTQllQGWB/giphy.gif" alt="Second GIF" class="footer-gif">
+        </div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="custom-cursor"></div>
+
+    <!-- Cursor Trail -->
+    <div class="cursor-trail"></div>
+
+    <script>
+        const customCursor = document.querySelector('.custom-cursor');
+        const cursorTrail = document.querySelector('.cursor-trail');
+
+        document.addEventListener("mousemove", (e) => {
+            // Update the custom cursor position
+            customCursor.style.left = `${e.pageX}px`;
+            customCursor.style.top = `${e.pageY}px`;
+
+            // Create and append a cursor trail element
+            const trailElement = document.createElement('div');
+            trailElement.className = 'cursor-trail';
+            trailElement.style.left = `${e.pageX}px`;
+            trailElement.style.top = `${e.pageY}px`;
+            document.body.appendChild(trailElement);
+
+            // Remove the trail element after a short delay (e.g., 1 second)
+            setTimeout(() => {
+                document.body.removeChild(trailElement);
+            }, 600);
+        });
+    </script>
+     <script id="cid0020000356613653150" data-cfasync="false" async src="//st.chatango.com/js/gz/emb.js" style="width: 230px;height: 375px;">{"handle":"breakingimgs","arch":"js","styles":{"a":"000000","b":100,"c":"2f74d2","d":"2f74d2","e":"000000","g":"2f74d2","h":"2f74d2","k":"000000","l":"000000","m":"000000","n":"FFFFFF","p":"10","q":"000000","r":100,"t":0,"ab":false,"usricon":0,"pos":"bl","cv":1,"cvfnt":"monospace, sans-serif","cvfntw":"bolder","cvbg":"000000","cvfg":"2f74d2","cvw":206,"cvh":70,"sbc":"2f74d2","surl":0,"ticker":1,"fwtickm":1}}</script>
+     
+<html lang="en">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breaking Images</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            font-family: Arial, sans-serif;
+            color: white;
+            min-height: 100vh; /* Ensure a minimum height equal to the viewport height */
+            cursor: none; /* Hide the default cursor */
+        }
+
+        /* Rest of your CSS styles... */
+
+        /* Custom Cursor Styles */
+        .custom-cursor {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: url('https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExczFzNG1uMGYxZzN5b2locDdlemYzNWoyczg5dXRmYmFrdnVlcmVuZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/EUn4opNv8im6nQ0IGp/giphy.gif'); /* Replace with your custom cursor GIF URL */
+            background-size: cover;
+            pointer-events: none;
+            z-index: 9999; /* Ensure it's above other elements */
+            display: none; /* Initially hide the custom cursor */
+        }
+    </style>
+
+    <!-- Your HTML content... -->
+
+    <!-- Custom Cursor -->
+    <div class="custom-cursor"></div>
+
+    <script>
+        const customCursor = document.querySelector('.custom-cursor');
+
+        // Hide the custom cursor initially
+        customCursor.style.display = 'none';
+
+        document.addEventListener("mousemove", (e) => {
+            // Update the custom cursor position
+            customCursor.style.left = `${e.pageX - 40}px`; // Adjust position to center the cursor
+            customCursor.style.top = `${e.pageY - 40}px`; // Adjust position to center the cursor
+
+            // Show the custom cursor
+            customCursor.style.display = 'block';
+
+            // Hide the default cursor
+            document.body.style.cursor = 'none';
+        });
+
+        // Optionally, you can hide the custom cursor when the mouse leaves the document
+        document.addEventListener("mouseout", () => {
+            customCursor.style.display = 'none';
+
+            // Restore the default cursor
+            document.body.style.cursor = 'auto';
+        });
+    </script>
+</body>
+</html>
+
+</body>
+</html>
+
+
