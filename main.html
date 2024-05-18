@@ -34,37 +34,44 @@
       align-items: center;
       overflow-y: auto;
       display: none; /* Initially hidden */
+      padding-bottom: 50px; /* To add some space at the bottom */
     }
     .section {
-      padding: 50px;
+      padding: 20px;
       max-width: 800px;
       text-align: center;
     }
     .section h1 {
       font-size: 2em; /* Header font size */
+  
     }
     .section p {
       font-size: 2em; /* Larger subtext font size, twice as big as headers */
+text-decoration: underline; /* Underline style */
     }
     .gif-container {
       margin-bottom: 20px; /* Adjust the space between the GIF and the PNG */
     }
     .image-space {
       width: 100%;
-      height: 200px; /* Adjust the height for image spaces */
+      height: 220px; /* Adjust the height for image spaces */
       background-color: black; /* Match the background color of the webpage */
       display: flex;
       justify-content: center;
       align-items: center;
+      margin-bottom: 10px; /* Reduced margin */
     }
     .image-space img {
-      max-width: 100%;
-      max-height: 100%;
+      max-width: 75%; /* Reduce the width to 75% */
+      max-height: 75%; /* Reduce the height to 75% */
       width: auto; /* Added to maintain aspect ratio */
       height: auto; /* Added to maintain aspect ratio */
     }
     .last-section {
       margin-top: 20px; /* Adjust the space between the last section's header and text */
+    }
+    .space {
+      height: 40px; /* Four lines of space */
     }
   </style>
 </head>
@@ -73,13 +80,17 @@
   <div id="content">
     <div class="section">
       <h1>UNDER THE TOMB PLAYING AT SELECT THEATRES NEAR YOU!</h1>
-      <p>DON'T MISS THE MADNESS!</p>
+      <p><strong>DON'T MISS THE MADNESS!</strong></p>
     </div>
     <div class="gif-container">
       <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExN3BuM25mdG9oMmh4aWo0ZjZwNW9tcmRkamR4ODNmb2U3aGthNGJxayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bXEWikAIZIh5E4G18Y/source.gif" alt="GIF"> <!-- Replace with your GIF -->
     </div>
+    <div class="space"></div> <!-- Four lines of space -->
     <div class="image-space">
       <img src="https://i.imgur.com/K6qT6B0.png" alt="Image 1"> <!-- Replace with your PNG image -->
+    </div>
+    <div class="section">
+      <p><strong>GET TICKETS NOW</strong></p>
     </div>
     <div class="section last-section"> <!-- Added last-section class -->
       <h1>USE YOUR UNIQUE PASSWORD AT ADMISSION OR BE DAMNED!!!</h1>
