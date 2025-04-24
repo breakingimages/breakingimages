@@ -6,7 +6,7 @@
   <title>Interactive 3D Video Cube</title>
   <style>
     body { margin: 0; overflow: hidden; }
-    .cube { position: relative; width: 300px; height: 300px; transform-style: preserve-3d; transform: rotateX(0deg) rotateY(0deg); transition: transform 0.5s; }
+    .cube { position: absolute; width: 300px; height: 300px; transform-style: preserve-3d; transform: rotateX(0deg) rotateY(0deg); transition: transform 0.5s; }
     .face { position: absolute; width: 100%; height: 100%; background: #000; display: flex; justify-content: center; align-items: center; }
     .front  { transform: translateZ(150px); }
     .back   { transform: rotateY(180deg) translateZ(150px); }
@@ -31,6 +31,11 @@
     const cube = document.getElementById('cube');
     const videos = document.querySelectorAll('video');
     let isDragging = false, startX, startY, currentX = 0, currentY = 0, scale = 1;
+    let isThrowing = false, throwSpeedX = 0, throwSpeedY = 0;
+
+    // Center the cube initially
+    cube.style.left = `${(window.innerWidth - cube.offsetWidth) / 2}px`;
+    cube.style.top = `${(window.innerHeight - cube.offsetHeight) / 2}px`;
 
     // Function to pause all videos
     function pauseAllVideos() {
@@ -44,7 +49,43 @@
       if (video) video.play();
     }
 
+    // Update the cube's position based on the current "throwing" speed
+    function updatePosition() {
+      if (isThrowing) {
+        let newX = parseFloat(cube.style.left) + throwSpeedX;
+        let newY = parseFloat(cube.style.top) + throwSpeedY;
+
+        // Prevent the cube from going beyond the screen's boundaries
+        newX = Math.min(Math.max(0, newX), window.innerWidth - cube.offsetWidth);
+        newY = Math.min(Math.max(0, newY), window.innerHeight - cube.offsetHeight);
+
+        cube.style.left = `${newX}px`;
+        cube.style.top = `${newY}px`;
+
+        // Slow down the cube for a more natural "throwing" effect
+        throwSpeedX *= 0.98; // Damping factor
+        throwSpeedY *= 0.98;
+
+        // Stop the cube when the speed is too low
+        if (Math.abs(throwSpeedX) < 0.1 && Math.abs(throwSpeedY) < 0.1) {
+          isThrowing = false;
+        }
+      }
+    }
+
+    // Handle right-click (start "throwing" the cube)
+    window.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      isThrowing = true;
+
+      // Calculate the speed based on the mouse movement
+      throwSpeedX = (e.clientX - window.innerWidth / 2) / 10;
+      throwSpeedY = (e.clientY - window.innerHeight / 2) / 10;
+    });
+
+    // Drag the cube using mouse (rotate along X and Y axes)
     cube.addEventListener('mousedown', (e) => {
+      if (e.button !== 2) return; // Only allow right-click to throw
       isDragging = true;
       startX = e.clientX - currentX;
       startY = e.clientY - currentY;
@@ -69,46 +110,39 @@
       cube.style.transform = `scale(${scale}) rotateX(${currentY / 2}deg) rotateY(${currentX / 2}deg)`;
     });
 
-    // Function to determine which face is facing the user
+    // Function to detect and play the video of the front-facing face
     function detectFrontFace() {
       const rect = cube.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
-      const cubeCenterX = window.innerWidth / 2;
-      const cubeCenterY = window.innerHeight / 2;
-
-      // Get the rotation angles of the cube
       const angleX = currentY / 2; // Rotate along the X-axis
       const angleY = currentX / 2; // Rotate along the Y-axis
 
-      // Find the closest face based on rotation
       let closestFace = null;
       let maxDotProduct = -Infinity;
-
-      // Iterate through the faces of the cube and calculate the dot product
       const faces = ['front', 'back', 'left', 'right', 'top', 'bottom'];
+
       faces.forEach(face => {
         const element = document.getElementById(face);
         const transformMatrix = window.getComputedStyle(element).transform;
         const matrix = new WebKitCSSMatrix(transformMatrix);
-
-        // Get the normal of the current face (this can be tricky; we'll approximate)
         const normal = { x: matrix.m11, y: matrix.m12, z: matrix.m13 };
+        const dotProduct = normal.x * (centerX - window.innerWidth / 2) + normal.y * (centerY - window.innerHeight / 2);
 
-        // Calculate the dot product to measure alignment
-        const dotProduct = normal.x * (centerX - cubeCenterX) + normal.y * (centerY - cubeCenterY);
         if (dotProduct > maxDotProduct) {
           maxDotProduct = dotProduct;
           closestFace = face;
         }
       });
 
-      // Play the video of the most front-facing face
       playVideoOnFace(closestFace);
     }
 
     // Continuously check which face is facing the user
     setInterval(detectFrontFace, 100);
+
+    // Update cube position for throwing effect
+    setInterval(updatePosition, 16); // Roughly 60 FPS
   </script>
 </body>
 </html>
