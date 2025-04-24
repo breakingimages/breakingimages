@@ -1,126 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Under the Tomb</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seamless YouTube Scroll</title>
   <style>
-    body, html {
+    * {
       margin: 0;
       padding: 0;
-      overflow: hidden;
-      height: 100%;
-      width: 100%;
+      box-sizing: border-box;
     }
-    #gif-container, #content {
+
+    body, html {
+      height: 100%;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+      background-color: black;
+    }
+
+    section {
+      height: 100vh;
+      position: relative;
+    }
+
+    iframe {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
-    }
-    #gif-container {
-      background: url('https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcGt5eHZxOHJyMGJiNWJyODg3dXk2bHNtM2dzN3AwNWVzMnluNGczeCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/k4TLvTAd9oz7nd50tN/giphy.gif') no-repeat center center/cover;
       height: 100%;
-      z-index: 10;
-      opacity: 1;
-      transition: opacity 0.5s ease-out; /* Faster transition */
-    }
-    #content {
-      background: url('https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcGt5eHZxOHJyMGJiNWJyODg3dXk2bHNtM2dzN3AwNWVzMnluNGczeCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/k4TLvTAd9oz7nd50tN/giphy.gif') repeat;
-      color: black;
-      z-index: 5;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      overflow-y: auto; /* Enable vertical scrolling */
-      height: calc(100% - 50px); /* Adjust height to leave space for the last line */
-      padding-bottom: 50px; /* To add some space at the bottom */
-    }
-    .section {
-      padding: 20px;
-      max-width: 800px;
-      text-align: center;
-    }
-    .text-container {
-      position: relative;
-      padding: 10px 20px;
-      display: inline-block;
-    }
-    .text-container::before {
-      content: '';
-      position: absolute;
-      top: -10px;
-      left: -10px;
-      right: -10px;
-      bottom: -10px;
-      background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
-      border-radius: 50%;
-      filter: blur(15px);
-      z-index: -1;
-    }
-    .text-container h1, .text-container p {
-      position: relative;
-      font-size: 2em;
-      text-shadow: 2px 2px 0px red, -2px -2px 0px red, 2px -2px 0px red, -2px 2px 0px red;
-      margin: 0; /* Remove default margin */
-    }
-    .section p {
-      font-size: 2em; /* Larger subtext font size, twice as big as headers */
-      text-decoration: underline; /* Underline style */
-      text-shadow: 2px 2px 0px red, -2px -2px 0px red, 2px -2px 0px red, -2px 2px 0px red;
-      margin: 0; /* Remove default margin */
-    }
-    .gif-container {
-      margin-bottom: 20px; /* Adjust the space between the GIF and the PNG */
-    }
-    .last-section {
-      margin-top: auto; /* Adjust the space between the last section's header and text */
-    }
-    .space {
-      height: 40px; /* Four lines of space */
+      border: none;
     }
   </style>
 </head>
 <body>
-  <div id="gif-container"></div>
-  <div id="content">
-    <div class="section">
-      <div class="text-container">
-        <h1>UNDER THE TOMB PLAYING AT SELECT THEATRES NEAR YOU!</h1>
-        <p><strong>DON'T MISS THE MADNESS!</strong></p>
-      </div>
-    </div>
-    <div class="gif-container">
-      <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExN3BuM25mdG9oMmh4aWo0ZjZwNW9tcmRkamR4ODNmb2U3aGthNGJxayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bXEWikAIZIh5E4G18Y/source.gif" alt="GIF"> <!-- Replace with your GIF -->
-    </div>
-    <div class="space"></div> <!-- Four lines of space -->
-    <div class="section">
-      <div class="text-container">
-        <p><strong>GET TICKETS NOW</strong></p>
-      </div>
-    </div>
-    <div class="section last-section"> <!-- Added last-section class -->
-      <div class="text-container">
-        <h1>USE YOUR UNIQUE PASSWORD AT ADMISSION OR BE DAMNED!!!</h1>
-        <p>Your Password: CUM</p>
-      </div>
-    </div>
-  </div>
+  <section id="video1-section">
+    <iframe id="player1" src="https://www.youtube.com/embed/hrgcRAryUaY?mute=1&enablejsapi=1&controls=0&loop=1&playlist=hrgcRAryUaY" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  </section>
+  <section id="video2-section">
+    <iframe id="player2" src="https://www.youtube.com/embed/9SBnKTBPpME?mute=1&enablejsapi=1&controls=0&loop=1&playlist=9SBnKTBPpME" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  </section>
 
   <script>
-    window.addEventListener('load', function() {
-      const gifContainer = document.getElementById('gif-container');
-      const content = document.getElementById('content');
-      
-      // Display content initially hidden behind the GIF
-      content.style.display = 'flex';
-      
-      document.body.addEventListener('click', () => {
-        gifContainer.style.opacity = '0';
-        setTimeout(() => {
-          gifContainer.style.display = 'none';
-        }, 500); // Match this duration to the CSS transition duration
+    let tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    let firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    let player1, player2;
+    let player2Ready = false;
+
+    function onYouTubeIframeAPIReady() {
+      player1 = new YT.Player('player1', {
+        events: {
+          onReady: (event) => {
+            event.target.mute();
+            event.target.playVideo();
+          }
+        }
       });
+
+      player2 = new YT.Player('player2', {
+        events: {
+          onReady: (event) => {
+            event.target.mute();
+            player2Ready = true;
+          }
+        }
+      });
+    }
+
+    function isElementMostlyInViewport(el, percentage = 0.8) {
+      const rect = el.getBoundingClientRect();
+      const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+      const elVisibleHeight = Math.min(rect.bottom, windowHeight) - Math.max(rect.top, 0);
+      const elTotalHeight = rect.height;
+      return elVisibleHeight / elTotalHeight > percentage;
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!player1 || !player2 || !player2Ready) return;
+
+      const video2Section = document.getElementById('video2-section');
+      const video2Visible = isElementMostlyInViewport(video2Section);
+
+      if (video2Visible) {
+        if (player2.getPlayerState() !== YT.PlayerState.PLAYING) {
+          player2.playVideo();
+        }
+        if (player1.getPlayerState() === YT.PlayerState.PLAYING) {
+          player1.pauseVideo();
+        }
+      } else {
+        if (player2.getPlayerState() === YT.PlayerState.PLAYING) {
+          player2.pauseVideo();
+        }
+        if (player1.getPlayerState() !== YT.PlayerState.PLAYING) {
+          player1.playVideo();
+        }
+      }
     });
   </script>
 </body>
