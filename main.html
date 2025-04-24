@@ -37,16 +37,22 @@
     cube.style.left = `${(window.innerWidth - cube.offsetWidth) / 2}px`;
     cube.style.top = `${(window.innerHeight - cube.offsetHeight) / 2}px`;
 
-    // Function to pause all videos
-    function pauseAllVideos() {
-      videos.forEach(video => video.pause());
+    // Function to pause all videos and mute them
+    function pauseAndMuteAllVideos() {
+      videos.forEach(video => {
+        video.pause();
+        video.muted = true;
+      });
     }
 
-    // Function to play a video on a specific face
+    // Function to play the video on a specific face and unmute it
     function playVideoOnFace(face) {
-      pauseAllVideos();
+      pauseAndMuteAllVideos();
       const video = document.getElementById(face);
-      if (video) video.play();
+      if (video) {
+        video.muted = false;  // Unmute the video
+        video.play();
+      }
     }
 
     // Update the cube's position based on the current "throwing" speed
