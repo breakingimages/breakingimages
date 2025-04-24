@@ -1,57 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ENTER</title>
-    <style>
-        body {
-            background-color: black;
-            color: red; /* Font color */
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 600px;
-            margin: 50px auto;
-            text-align: center;
-        }
-        h2 {
-            font-family: 'Metal Mania', cursive; /* Heavy metal font */
-            font-size: 36px;
-        }
-        input[type="text"] {
-            width: 60%;
-            padding: 8px;
-            margin-top: 10px;
-            box-sizing: border-box;
-            border: 2px solid #999;
-            background-color: white;
-            font-family: Courier New, monospace;
-            font-size: 14px;
-            color: black;
-            outline: none; /* Removes the default blue outline on focus */
-        }
-    </style>
-    <!-- Link to Google Fonts for Metal Mania -->
-    <link href="https://fonts.googleapis.com/css2?family=Metal+Mania&display=swap" rel="stylesheet">
-    <script>
-        function redirectToMainPage(event) {
-            if (event.key === "Enter") {
-                var userInput = event.target.value.trim();
-                if (userInput !== "") {
-                    window.location.href = "main.html"; // Replace with the URL of your main.html file in the GitHub repository
-                }
-            }
-        }
-    </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seamless YouTube Scroll</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      height: 100%;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+      background-color: black;
+    }
+
+    section {
+      height: 100vh;
+      position: relative;
+    }
+
+    iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHFxcG9oM3FkZm4wNGVrYXRsbXE4cmtrbjA3eXZ6emgyMTE0eng2biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/x5nkVK0hK7pXaYP5Bb/giphy.gif" alt="GIF" width="200" alt="GIF" width="200">
-        <h2>What are you afraid of?</h2>
-        <input type="text" placeholder="Answer if you dare..." onkeypress="redirectToMainPage(event)">
-    </div>
+  <section id="video1-section">
+    <iframe id="player1" src="https://www.youtube.com/embed/hrgcRAryUaY?mute=1&enablejsapi=1&controls=0&loop=1&playlist=hrgcRAryUaY" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  </section>
+  <section id="video2-section">
+    <iframe id="player2" src="https://www.youtube.com/embed/9SBnKTBPpME?mute=1&enablejsapi=1&controls=0&loop=1&playlist=9SBnKTBPpME" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  </section>
+
+  <script>
+    let tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    let firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    let player1, player2;
+    let player2Ready = false;
+
+    function onYouTubeIframeAPIReady() {
+      player1 = new YT.Player('player1', {
+        events: {
+          onReady: (event) => {
+            event.target.mute();
+            event.target.playVideo();
+          }
+        }
+      });
+
+      player2 = new YT.Player('player2', {
+        events: {
+          onReady: (event) => {
+            event.target.mute();
+            player2Ready = true;
+          }
+        }
+      });
+    }
+
+    function isElementMostlyInViewport(el, percentage = 0.8) {
+      const rect = el.getBoundingClientRect();
+      const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+      const elVisibleHeight = Math.min(rect.bottom, windowHeight) - Math.max(rect.top, 0);
+      const elTotalHeight = rect.height;
+      return elVisibleHeight / elTotalHeight > percentage;
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!player1 || !player2 || !player2Ready) return;
+
+      const video2Section = document.getElementById('video2-section');
+      const video2Visible = isElementMostlyInViewport(video2Section);
+
+      if (video2Visible) {
+        if (player2.getPlayerState() !== YT.PlayerState.PLAYING) {
+          player2.playVideo();
+        }
+        if (player1.getPlayerState() === YT.PlayerState.PLAYING) {
+          player1.pauseVideo();
+        }
+      } else {
+        if (player2.getPlayerState() === YT.PlayerState.PLAYING) {
+          player2.pauseVideo();
+        }
+        if (player1.getPlayerState() !== YT.PlayerState.PLAYING) {
+          player1.playVideo();
+        }
+      }
+    });
+  </script>
 </body>
 </html>
