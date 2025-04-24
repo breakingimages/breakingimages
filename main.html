@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Seamless YouTube Scroll</title>
+  <title>Seamless YouTube Scroll with Transparent Sound Icon</title>
   <style>
     * {
       margin: 0;
@@ -31,14 +31,60 @@
       height: 100%;
       border: none;
     }
+
+    .volume-icon {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 4rem;
+      color: white;
+      cursor: pointer;
+      z-index: 9999;
+      opacity: 0; /* Initially hidden */
+      pointer-events: none; /* Prevents interaction until visible */
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .volume-icon.show {
+      opacity: 1; /* Visible when the mouse enters */
+      pointer-events: auto;
+    }
+
+    /* Simple audio logo */
+    .volume-icon:before {
+      content: '\f028'; /* Font Awesome volume icon */
+      font-family: 'FontAwesome';
+      font-size: 4rem;
+    }
+
+    /* Fade out effect */
+    .fade {
+      animation: fadeOut 1s forwards;
+    }
+
+    @keyframes fadeOut {
+      0% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+      }
+    }
+
   </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome -->
 </head>
 <body>
+  <!-- Simple white volume icon -->
+  <div class="volume-icon" id="unmuteIcon"></div>
+
   <section id="video1-section">
-    <iframe id="player1" src="https://www.youtube.com/embed/hrgcRAryUaY?mute=1&enablejsapi=1&controls=0&loop=1&playlist=hrgcRAryUaY" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <iframe id="player1" src="https://www.youtube.com/embed/hrgcRAryUaY?enablejsapi=1&autoplay=1&mute=1&loop=1&playlist=hrgcRAryUaY&controls=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
   </section>
+
   <section id="video2-section">
-    <iframe id="player2" src="https://www.youtube.com/embed/9SBnKTBPpME?mute=1&enablejsapi=1&controls=0&loop=1&playlist=9SBnKTBPpME" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <iframe id="player2" src="https://www.youtube.com/embed/9SBnKTBPpME?enablejsapi=1&autoplay=0&mute=1&loop=1&playlist=9SBnKTBPpME&controls=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
   </section>
 
   <script>
@@ -47,24 +93,24 @@
     let firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-    let player1, player2;
-    let player2Ready = false;
+    let player1, player2, playersReady = 0;
 
     function onYouTubeIframeAPIReady() {
       player1 = new YT.Player('player1', {
         events: {
-          onReady: (event) => {
-            event.target.mute();
-            event.target.playVideo();
+          onReady: () => {
+            playersReady++;
+            player1.mute();  // Muted initially
+            player1.playVideo();
           }
         }
       });
 
       player2 = new YT.Player('player2', {
         events: {
-          onReady: (event) => {
-            event.target.mute();
-            player2Ready = true;
+          onReady: () => {
+            playersReady++;
+            player2.mute();  // Muted initially
           }
         }
       });
@@ -79,26 +125,44 @@
     }
 
     window.addEventListener('scroll', () => {
-      if (!player1 || !player2 || !player2Ready) return;
+      if (playersReady < 2) return;
 
-      const video2Section = document.getElementById('video2-section');
-      const video2Visible = isElementMostlyInViewport(video2Section);
+      const video1Visible = isElementMostlyInViewport(document.getElementById('video1-section'));
+      const video2Visible = isElementMostlyInViewport(document.getElementById('video2-section'));
 
-      if (video2Visible) {
-        if (player2.getPlayerState() !== YT.PlayerState.PLAYING) {
-          player2.playVideo();
-        }
-        if (player1.getPlayerState() === YT.PlayerState.PLAYING) {
-          player1.pauseVideo();
-        }
-      } else {
-        if (player2.getPlayerState() === YT.PlayerState.PLAYING) {
-          player2.pauseVideo();
-        }
-        if (player1.getPlayerState() !== YT.PlayerState.PLAYING) {
-          player1.playVideo();
-        }
+      if (video1Visible && player1.getPlayerState() !== YT.PlayerState.PLAYING) {
+        player1.playVideo();
+        if (player2.getPlayerState() === YT.PlayerState.PLAYING) player2.pauseVideo();
       }
+
+      if (video2Visible && player2.getPlayerState() !== YT.PlayerState.PLAYING) {
+        player2.playVideo();
+        if (player1.getPlayerState() === YT.PlayerState.PLAYING) player1.pauseVideo();
+      }
+    });
+
+    document.getElementById('unmuteIcon').addEventListener('click', () => {
+      player1.unMute();
+      player2.unMute();
+
+      const icon = document.getElementById('unmuteIcon');
+
+      // Fade out the icon
+      icon.classList.add('fade');
+
+      setTimeout(() => {
+        icon.style.display = 'none';  // Hide the icon after fading
+      }, 1000); // Wait for the fade-out to complete
+    });
+
+    // Show the volume icon when the mouse enters the screen
+    window.addEventListener('mousemove', () => {
+      document.getElementById('unmuteIcon').classList.add('show');
+    });
+
+    // Hide the volume icon when mouse leaves the screen
+    window.addEventListener('mouseout', () => {
+      document.getElementById('unmuteIcon').classList.remove('show');
     });
   </script>
 </body>
