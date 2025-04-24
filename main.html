@@ -19,7 +19,7 @@
 </head>
 <body>
   <div class="cube" id="cube">
-    <div class="face front"><video id="front" autoplay muted loop><source src="https://archive.org/download/SampleVideo1280x7205mb/SampleVideo_1280x720_5mb.mp4" type="video/mp4"></video></div>
+    <div class="face front"><video id="front" muted loop><source src="https://archive.org/download/SampleVideo1280x7205mb/SampleVideo_1280x720_5mb.mp4" type="video/mp4"></video></div>
     <div class="face back"><video id="back" muted loop><source src="https://archive.org/download/SampleVideo1280x7205mb/SampleVideo_1280x720_5mb.mp4" type="video/mp4"></video></div>
     <div class="face left"><video id="left" muted loop><source src="https://archive.org/download/SampleVideo1280x7205mb/SampleVideo_1280x720_5mb.mp4" type="video/mp4"></video></div>
     <div class="face right"><video id="right" muted loop><source src="https://archive.org/download/SampleVideo1280x7205mb/SampleVideo_1280x720_5mb.mp4" type="video/mp4"></video></div>
@@ -32,8 +32,14 @@
     const videos = document.querySelectorAll('video');
     let isDragging = false, startX, startY, currentX = 0, currentY = 0, scale = 1;
 
-    function playVideoOnFace(face) {
+    // Function to pause all videos
+    function pauseAllVideos() {
       videos.forEach(video => video.pause());
+    }
+
+    // Function to play a video on a specific face
+    function playVideoOnFace(face) {
+      pauseAllVideos();
       const video = document.getElementById(face);
       if (video) video.play();
     }
@@ -63,27 +69,45 @@
       cube.style.transform = `scale(${scale}) rotateX(${currentY / 2}deg) rotateY(${currentX / 2}deg)`;
     });
 
+    // Function to determine which face is facing the user
     function detectFrontFace() {
       const rect = cube.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
-      const angleX = Math.atan2(centerY - window.innerHeight / 2, centerX - window.innerWidth / 2) * 180 / Math.PI;
-      const angleY = Math.atan2(centerY - window.innerHeight / 2, centerX - window.innerWidth / 2) * 180 / Math.PI;
-      if (angleX > -45 && angleX < 45 && angleY > -45 && angleY < 45) {
-        playVideoOnFace('front');
-      } else if (angleX > 135 || angleX < -135) {
-        playVideoOnFace('back');
-      } else if (angleY > 45 && angleY < 135) {
-        playVideoOnFace('top');
-      } else if (angleY > -135 && angleY < -45) {
-        playVideoOnFace('bottom');
-      } else if (angleX > 45 && angleX < 135) {
-        playVideoOnFace('left');
-      } else if (angleX > -135 && angleX < -45) {
-        playVideoOnFace('right');
-      }
+      const cubeCenterX = window.innerWidth / 2;
+      const cubeCenterY = window.innerHeight / 2;
+
+      // Get the rotation angles of the cube
+      const angleX = currentY / 2; // Rotate along the X-axis
+      const angleY = currentX / 2; // Rotate along the Y-axis
+
+      // Find the closest face based on rotation
+      let closestFace = null;
+      let maxDotProduct = -Infinity;
+
+      // Iterate through the faces of the cube and calculate the dot product
+      const faces = ['front', 'back', 'left', 'right', 'top', 'bottom'];
+      faces.forEach(face => {
+        const element = document.getElementById(face);
+        const transformMatrix = window.getComputedStyle(element).transform;
+        const matrix = new WebKitCSSMatrix(transformMatrix);
+
+        // Get the normal of the current face (this can be tricky; we'll approximate)
+        const normal = { x: matrix.m11, y: matrix.m12, z: matrix.m13 };
+
+        // Calculate the dot product to measure alignment
+        const dotProduct = normal.x * (centerX - cubeCenterX) + normal.y * (centerY - cubeCenterY);
+        if (dotProduct > maxDotProduct) {
+          maxDotProduct = dotProduct;
+          closestFace = face;
+        }
+      });
+
+      // Play the video of the most front-facing face
+      playVideoOnFace(closestFace);
     }
 
+    // Continuously check which face is facing the user
     setInterval(detectFrontFace, 100);
   </script>
 </body>
