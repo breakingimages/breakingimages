@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>3D Video Cube</title>
+  <title>3D YouTube Cube</title>
   <style>
     body, html {
       margin: 0;
@@ -35,38 +35,38 @@
       align-items: center;
     }
 
-    video {
+    iframe {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      border: none;
     }
   </style>
 </head>
 <body>
   <div id="cube-container">
     <div class="face" style="transform: rotateY(0deg) translateZ(150px);">
-      <video src="https://www.w3schools.com/html/mov_bbb.mp4" muted loop></video>
+      <iframe src="https://www.youtube.com/embed/hrgcRAryUaY?enablejsapi=1" allow="autoplay"></iframe>
     </div>
     <div class="face" style="transform: rotateY(90deg) translateZ(150px);">
-      <video src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" muted loop></video>
+      <iframe src="https://www.youtube.com/embed/9SBnKTBPpME?enablejsapi=1" allow="autoplay"></iframe>
     </div>
     <div class="face" style="transform: rotateY(180deg) translateZ(150px);">
-      <video src="https://media.w3.org/2010/05/sintel/trailer.mp4" muted loop></video>
+      <iframe src="https://www.youtube.com/embed/B2CpcHIxaOw?enablejsapi=1" allow="autoplay"></iframe>
     </div>
     <div class="face" style="transform: rotateY(-90deg) translateZ(150px);">
-      <video src="https://media.w3.org/2010/05/bunny/movie.mp4" muted loop></video>
+      <iframe src="https://www.youtube.com/embed/dKlpKE7x7mY?enablejsapi=1" allow="autoplay"></iframe>
     </div>
     <div class="face" style="transform: rotateX(90deg) translateZ(150px);">
-      <video src="https://media.w3.org/2010/05/video/movie_300.mp4" muted loop></video>
+      <iframe src="https://www.youtube.com/embed/eMiwRjiQpV4?enablejsapi=1" allow="autoplay"></iframe>
     </div>
     <div class="face" style="transform: rotateX(-90deg) translateZ(150px);">
-      <video src="https://media.w3.org/2010/05/video/movie_700.mp4" muted loop></video>
+      <iframe src="https://www.youtube.com/embed/7r_3tZ0SzDc?enablejsapi=1" allow="autoplay"></iframe>
     </div>
   </div>
 
   <script>
     const cube = document.getElementById('cube-container');
-    const videos = cube.querySelectorAll('video');
+    const iframes = cube.querySelectorAll('iframe');
     let xRotation = 0;
     let yRotation = 0;
     let scale = 1;
@@ -75,18 +75,17 @@
     let velocityX = 0;
     let velocityY = 0;
     let momentumInterval;
+    const angles = [
+      [0, 0], [0, 90], [0, 180], [0, -90], [90, 0], [-90, 0]
+    ];
 
     function updateCubeTransform() {
       cube.style.transform = `scale(${scale}) rotateX(${xRotation}deg) rotateY(${yRotation}deg)`;
     }
 
     function snapToNearestFace() {
-      const angles = [
-        [0, 0], [0, 90], [0, 180], [0, -90], [90, 0], [-90, 0]
-      ];
       let minDist = Infinity;
       let target = [0, 0];
-
       angles.forEach(([x, y]) => {
         const dx = ((xRotation - x + 360) % 360) - 180;
         const dy = ((yRotation - y + 360) % 360) - 180;
@@ -96,27 +95,17 @@
           target = [x, y];
         }
       });
-
       xRotation = target[0];
       yRotation = target[1];
       updateCubeTransform();
-      updateVideoPlayback();
+      updateYouTubePlayback();
     }
 
-    function updateVideoPlayback() {
-      const angles = [
-        [0, 0], [0, 90], [0, 180], [0, -90], [90, 0], [-90, 0]
-      ];
+    function updateYouTubePlayback() {
       const activeIndex = angles.findIndex(([x, y]) => x === xRotation && y === yRotation);
-
-      videos.forEach((vid, i) => {
-        if (i === activeIndex) {
-          vid.play();
-          vid.muted = false;
-        } else {
-          vid.pause();
-          vid.muted = true;
-        }
+      iframes.forEach((frame, i) => {
+        const command = i === activeIndex ? 'playVideo' : 'pauseVideo';
+        frame.contentWindow.postMessage(JSON.stringify({ event: 'command', func: command, args: [] }), '*');
       });
     }
 
@@ -169,7 +158,7 @@
 
     window.onload = () => {
       updateCubeTransform();
-      updateVideoPlayback();
+      updateYouTubePlayback();
     };
   </script>
 </body>
