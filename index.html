@@ -31,7 +31,6 @@
     const cube = document.getElementById('cube');
     const videos = document.querySelectorAll('video');
     let isDragging = false, startX, startY, currentX = 0, currentY = 0, scale = 1;
-    let isThrowing = false, throwSpeedX = 0, throwSpeedY = 0;
 
     // Center the cube initially
     cube.style.left = `${(window.innerWidth - cube.offsetWidth) / 2}px`;
@@ -54,59 +53,6 @@
         video.play();
       }
     }
-
-    // Update the cube's position based on the current "throwing" speed
-    function updatePosition() {
-      if (isThrowing) {
-        let newX = parseFloat(cube.style.left) + throwSpeedX;
-        let newY = parseFloat(cube.style.top) + throwSpeedY;
-
-        // Prevent the cube from going beyond the screen's boundaries
-        newX = Math.min(Math.max(0, newX), window.innerWidth - cube.offsetWidth);
-        newY = Math.min(Math.max(0, newY), window.innerHeight - cube.offsetHeight);
-
-        cube.style.left = `${newX}px`;
-        cube.style.top = `${newY}px`;
-
-        // Slow down the cube for a more natural "throwing" effect
-        throwSpeedX *= 0.98; // Damping factor
-        throwSpeedY *= 0.98;
-
-        // Stop the cube when the speed is too low
-        if (Math.abs(throwSpeedX) < 0.1 && Math.abs(throwSpeedY) < 0.1) {
-          isThrowing = false;
-        }
-      }
-    }
-
-    // Handle Shift + Click (start "throwing" the cube)
-    window.addEventListener('mousedown', (e) => {
-      if (e.shiftKey) {
-        isThrowing = true;
-        startX = e.clientX - currentX;
-        startY = e.clientY - currentY;
-        e.preventDefault();
-      }
-    });
-
-    window.addEventListener('mousemove', (e) => {
-      if (isThrowing) {
-        currentX = e.clientX - startX;
-        currentY = e.clientY - startY;
-        cube.style.left = `${currentX}px`;
-        cube.style.top = `${currentY}px`;
-      }
-    });
-
-    window.addEventListener('mouseup', () => {
-      isThrowing = false;
-    });
-
-    window.addEventListener('wheel', (e) => {
-      scale += e.deltaY * -0.01;
-      scale = Math.min(Math.max(0.5, scale), 3);
-      cube.style.transform = `scale(${scale}) rotateX(${currentY / 2}deg) rotateY(${currentX / 2}deg)`;
-    });
 
     // Function to detect and play the video of the front-facing face
     function detectFrontFace() {
@@ -137,8 +83,31 @@
     // Continuously check which face is facing the user
     setInterval(detectFrontFace, 100);
 
-    // Update cube position for throwing effect
-    setInterval(updatePosition, 16); // Roughly 60 FPS
+    // Mouse events for rotating the cube
+    window.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      startX = e.clientX - currentX;
+      startY = e.clientY - currentY;
+      e.preventDefault();
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        currentX = e.clientX - startX;
+        currentY = e.clientY - startY;
+        cube.style.transform = `rotateX(${currentY / 2}deg) rotateY(${currentX / 2}deg)`;
+      }
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+
+    window.addEventListener('wheel', (e) => {
+      scale += e.deltaY * -0.01;
+      scale = Math.min(Math.max(0.5, scale), 3);
+      cube.style.transform = `scale(${scale}) rotateX(${currentY / 2}deg) rotateY(${currentX / 2}deg)`;
+    });
   </script>
 </body>
 </html>
