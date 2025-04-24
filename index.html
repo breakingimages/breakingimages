@@ -6,7 +6,7 @@
   <title>Interactive 3D Video Cube</title>
   <style>
     body { margin: 0; overflow: hidden; }
-    .cube { position: relative; width: 300px; height: 300px; transform-style: preserve-3d; transform: rotateX(0deg) rotateY(0deg); transition: transform 0.5s; }
+    .cube { position: absolute; width: 300px; height: 300px; transform-style: preserve-3d; transform: rotateX(0deg) rotateY(0deg); transition: transform 0.5s; }
     .face { position: absolute; width: 100%; height: 100%; background: #000; display: flex; justify-content: center; align-items: center; }
     .front  { transform: translateZ(150px); }
     .back   { transform: rotateY(180deg) translateZ(150px); }
@@ -19,42 +19,87 @@
 </head>
 <body>
   <div class="cube" id="cube">
-    <div class="face front"><video id="front" autoplay muted loop><source src="https://archive.org/download/SampleVideo1280x7205mb/SampleVideo_1280x720_5mb.mp4" type="video/mp4"></video></div>
-    <div class="face back"><video id="back" muted loop><source src="https://archive.org/download/SampleVideo1280x7205mb/SampleVideo_1280x720_5mb.mp4" type="video/mp4"></video></div>
-    <div class="face left"><video id="left" muted loop><source src="https://archive.org/download/SampleVideo1280x7205mb/SampleVideo_1280x720_5mb.mp4" type="video/mp4"></video></div>
-    <div class="face right"><video id="right" muted loop><source src="https://archive.org/download/SampleVideo1280x7205mb/SampleVideo_1280x720_5mb.mp4" type="video/mp4"></video></div>
-    <div class="face top"><video id="top" muted loop><source src="https://archive.org/download/SampleVideo1280x7205mb/SampleVideo_1280x720_5mb.mp4" type="video/mp4"></video></div>
-    <div class="face bottom"><video id="bottom" muted loop><source src="https://archive.org/download/SampleVideo1280x7205mb/SampleVideo_1280x720_5mb.mp4" type="video/mp4"></video></div>
+    <div class="face front"><video id="front" muted loop><source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4"></video></div>
+    <div class="face back"><video id="back" muted loop><source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4"></video></div>
+    <div class="face left"><video id="left" muted loop><source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4"></video></div>
+    <div class="face right"><video id="right" muted loop><source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4"></video></div>
+    <div class="face top"><video id="top" muted loop><source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4"></video></div>
+    <div class="face bottom"><video id="bottom" muted loop><source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4"></video></div>
   </div>
 
   <script>
     const cube = document.getElementById('cube');
     const videos = document.querySelectorAll('video');
     let isDragging = false, startX, startY, currentX = 0, currentY = 0, scale = 1;
+    let isThrowing = false, throwSpeedX = 0, throwSpeedY = 0;
 
-    function playVideoOnFace(face) {
-      videos.forEach(video => video.pause());
-      const video = document.getElementById(face);
-      if (video) video.play();
+    // Center the cube initially
+    cube.style.left = `${(window.innerWidth - cube.offsetWidth) / 2}px`;
+    cube.style.top = `${(window.innerHeight - cube.offsetHeight) / 2}px`;
+
+    // Function to pause all videos and mute them
+    function pauseAndMuteAllVideos() {
+      videos.forEach(video => {
+        video.pause();
+        video.muted = true;
+      });
     }
 
-    cube.addEventListener('mousedown', (e) => {
-      isDragging = true;
-      startX = e.clientX - currentX;
-      startY = e.clientY - currentY;
-      e.preventDefault();
+    // Function to play the video on a specific face and unmute it
+    function playVideoOnFace(face) {
+      pauseAndMuteAllVideos();
+      const video = document.getElementById(face);
+      if (video) {
+        video.muted = false;  // Unmute the video
+        video.play();
+      }
+    }
+
+    // Update the cube's position based on the current "throwing" speed
+    function updatePosition() {
+      if (isThrowing) {
+        let newX = parseFloat(cube.style.left) + throwSpeedX;
+        let newY = parseFloat(cube.style.top) + throwSpeedY;
+
+        // Prevent the cube from going beyond the screen's boundaries
+        newX = Math.min(Math.max(0, newX), window.innerWidth - cube.offsetWidth);
+        newY = Math.min(Math.max(0, newY), window.innerHeight - cube.offsetHeight);
+
+        cube.style.left = `${newX}px`;
+        cube.style.top = `${newY}px`;
+
+        // Slow down the cube for a more natural "throwing" effect
+        throwSpeedX *= 0.98; // Damping factor
+        throwSpeedY *= 0.98;
+
+        // Stop the cube when the speed is too low
+        if (Math.abs(throwSpeedX) < 0.1 && Math.abs(throwSpeedY) < 0.1) {
+          isThrowing = false;
+        }
+      }
+    }
+
+    // Handle Shift + Click (start "throwing" the cube)
+    window.addEventListener('mousedown', (e) => {
+      if (e.shiftKey) {
+        isThrowing = true;
+        startX = e.clientX - currentX;
+        startY = e.clientY - currentY;
+        e.preventDefault();
+      }
     });
 
     window.addEventListener('mousemove', (e) => {
-      if (isDragging) {
+      if (isThrowing) {
         currentX = e.clientX - startX;
         currentY = e.clientY - startY;
-        cube.style.transform = `rotateX(${currentY / 2}deg) rotateY(${currentX / 2}deg)`;
+        cube.style.left = `${currentX}px`;
+        cube.style.top = `${currentY}px`;
       }
     });
 
     window.addEventListener('mouseup', () => {
-      isDragging = false;
+      isThrowing = false;
     });
 
     window.addEventListener('wheel', (e) => {
@@ -63,28 +108,37 @@
       cube.style.transform = `scale(${scale}) rotateX(${currentY / 2}deg) rotateY(${currentX / 2}deg)`;
     });
 
+    // Function to detect and play the video of the front-facing face
     function detectFrontFace() {
       const rect = cube.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
-      const angleX = Math.atan2(centerY - window.innerHeight / 2, centerX - window.innerWidth / 2) * 180 / Math.PI;
-      const angleY = Math.atan2(centerY - window.innerHeight / 2, centerX - window.innerWidth / 2) * 180 / Math.PI;
-      if (angleX > -45 && angleX < 45 && angleY > -45 && angleY < 45) {
-        playVideoOnFace('front');
-      } else if (angleX > 135 || angleX < -135) {
-        playVideoOnFace('back');
-      } else if (angleY > 45 && angleY < 135) {
-        playVideoOnFace('top');
-      } else if (angleY > -135 && angleY < -45) {
-        playVideoOnFace('bottom');
-      } else if (angleX > 45 && angleX < 135) {
-        playVideoOnFace('left');
-      } else if (angleX > -135 && angleX < -45) {
-        playVideoOnFace('right');
-      }
+
+      let closestFace = null;
+      let maxDotProduct = -Infinity;
+      const faces = ['front', 'back', 'left', 'right', 'top', 'bottom'];
+
+      faces.forEach(face => {
+        const element = document.getElementById(face);
+        const transformMatrix = window.getComputedStyle(element).transform;
+        const matrix = new WebKitCSSMatrix(transformMatrix);
+        const normal = { x: matrix.m11, y: matrix.m12, z: matrix.m13 };
+        const dotProduct = normal.x * (centerX - window.innerWidth / 2) + normal.y * (centerY - window.innerHeight / 2);
+
+        if (dotProduct > maxDotProduct) {
+          maxDotProduct = dotProduct;
+          closestFace = face;
+        }
+      });
+
+      playVideoOnFace(closestFace);
     }
 
+    // Continuously check which face is facing the user
     setInterval(detectFrontFace, 100);
+
+    // Update cube position for throwing effect
+    setInterval(updatePosition, 16); // Roughly 60 FPS
   </script>
 </body>
 </html>
