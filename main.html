@@ -1,169 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Seamless YouTube Scroll with Transparent Sound Icon</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive 3D Video Cube</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body, html {
-      height: 100%;
-      overflow-x: hidden;
-      scroll-behavior: smooth;
-      background-color: black;
-    }
-
-    section {
-      height: 100vh;
-      position: relative;
-    }
-
-    iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-
-    .volume-icon {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 4rem;
-      color: white;
-      cursor: pointer;
-      z-index: 9999;
-      opacity: 0; /* Initially hidden */
-      pointer-events: none; /* Prevents interaction until visible */
-      transition: opacity 0.3s ease-in-out;
-    }
-
-    .volume-icon.show {
-      opacity: 1; /* Visible when the mouse enters */
-      pointer-events: auto;
-    }
-
-    /* Simple audio logo */
-    .volume-icon:before {
-      content: '\f028'; /* Font Awesome volume icon */
-      font-family: 'FontAwesome';
-      font-size: 4rem;
-    }
-
-    /* Fade out effect */
-    .fade {
-      animation: fadeOut 1s forwards;
-    }
-
-    @keyframes fadeOut {
-      0% {
-        opacity: 1;
-      }
-      100% {
-        opacity: 0;
-      }
-    }
-
+    body { margin: 0; overflow: hidden; }
+    .cube { position: relative; width: 300px; height: 300px; transform-style: preserve-3d; transform: rotateX(0deg) rotateY(0deg); transition: transform 0.5s; }
+    .face { position: absolute; width: 100%; height: 100%; background: #000; display: flex; justify-content: center; align-items: center; }
+    .front  { transform: translateZ(150px); }
+    .back   { transform: rotateY(180deg) translateZ(150px); }
+    .left   { transform: rotateY(-90deg) translateZ(150px); }
+    .right  { transform: rotateY(90deg) translateZ(150px); }
+    .top    { transform: rotateX(90deg) translateZ(150px); }
+    .bottom { transform: rotateX(-90deg) translateZ(150px); }
+    video { width: 100%; height: 100%; object-fit: cover; }
   </style>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome -->
 </head>
 <body>
-  <!-- Simple white volume icon -->
-  <div class="volume-icon" id="unmuteIcon"></div>
-
-  <section id="video1-section">
-    <iframe id="player1" src="https://www.youtube.com/embed/hrgcRAryUaY?enablejsapi=1&autoplay=1&mute=1&loop=1&playlist=hrgcRAryUaY&controls=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-  </section>
-
-  <section id="video2-section">
-    <iframe id="player2" src="https://www.youtube.com/embed/9SBnKTBPpME?enablejsapi=1&autoplay=0&mute=1&loop=1&playlist=9SBnKTBPpME&controls=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-  </section>
+  <div class="cube" id="cube">
+    <div class="face front"><video id="front" autoplay muted loop><source src="https://archive.org/download/SampleVideo1280x7205mb/SampleVideo_1280x720_5mb.mp4" type="video/mp4"></video></div>
+    <div class="face back"><video id="back" muted loop><source src="https://archive.org/download/SampleVideo1280x7205mb/SampleVideo_1280x720_5mb.mp4" type="video/mp4"></video></div>
+    <div class="face left"><video id="left" muted loop><source src="https://archive.org/download/SampleVideo1280x7205mb/SampleVideo_1280x720_5mb.mp4" type="video/mp4"></video></div>
+    <div class="face right"><video id="right" muted loop><source src="https://archive.org/download/SampleVideo1280x7205mb/SampleVideo_1280x720_5mb.mp4" type="video/mp4"></video></div>
+    <div class="face top"><video id="top" muted loop><source src="https://archive.org/download/SampleVideo1280x7205mb/SampleVideo_1280x720_5mb.mp4" type="video/mp4"></video></div>
+    <div class="face bottom"><video id="bottom" muted loop><source src="https://archive.org/download/SampleVideo1280x7205mb/SampleVideo_1280x720_5mb.mp4" type="video/mp4"></video></div>
+  </div>
 
   <script>
-    let tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    let firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    const cube = document.getElementById('cube');
+    const videos = document.querySelectorAll('video');
+    let isDragging = false, startX, startY, currentX = 0, currentY = 0, scale = 1;
 
-    let player1, player2, playersReady = 0;
-
-    function onYouTubeIframeAPIReady() {
-      player1 = new YT.Player('player1', {
-        events: {
-          onReady: () => {
-            playersReady++;
-            player1.mute();  // Muted initially
-            player1.playVideo();
-          }
-        }
-      });
-
-      player2 = new YT.Player('player2', {
-        events: {
-          onReady: () => {
-            playersReady++;
-            player2.mute();  // Muted initially
-          }
-        }
-      });
+    function playVideoOnFace(face) {
+      videos.forEach(video => video.pause());
+      const video = document.getElementById(face);
+      if (video) video.play();
     }
 
-    function isElementMostlyInViewport(el, percentage = 0.8) {
-      const rect = el.getBoundingClientRect();
-      const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-      const elVisibleHeight = Math.min(rect.bottom, windowHeight) - Math.max(rect.top, 0);
-      const elTotalHeight = rect.height;
-      return elVisibleHeight / elTotalHeight > percentage;
-    }
+    cube.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      startX = e.clientX - currentX;
+      startY = e.clientY - currentY;
+      e.preventDefault();
+    });
 
-    window.addEventListener('scroll', () => {
-      if (playersReady < 2) return;
-
-      const video1Visible = isElementMostlyInViewport(document.getElementById('video1-section'));
-      const video2Visible = isElementMostlyInViewport(document.getElementById('video2-section'));
-
-      if (video1Visible && player1.getPlayerState() !== YT.PlayerState.PLAYING) {
-        player1.playVideo();
-        if (player2.getPlayerState() === YT.PlayerState.PLAYING) player2.pauseVideo();
-      }
-
-      if (video2Visible && player2.getPlayerState() !== YT.PlayerState.PLAYING) {
-        player2.playVideo();
-        if (player1.getPlayerState() === YT.PlayerState.PLAYING) player1.pauseVideo();
+    window.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        currentX = e.clientX - startX;
+        currentY = e.clientY - startY;
+        cube.style.transform = `rotateX(${currentY / 2}deg) rotateY(${currentX / 2}deg)`;
       }
     });
 
-    document.getElementById('unmuteIcon').addEventListener('click', () => {
-      player1.unMute();
-      player2.unMute();
-
-      const icon = document.getElementById('unmuteIcon');
-
-      // Fade out the icon
-      icon.classList.add('fade');
-
-      setTimeout(() => {
-        icon.style.display = 'none';  // Hide the icon after fading
-      }, 1000); // Wait for the fade-out to complete
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
     });
 
-    // Show the volume icon when the mouse enters the screen
-    window.addEventListener('mousemove', () => {
-      document.getElementById('unmuteIcon').classList.add('show');
+    window.addEventListener('wheel', (e) => {
+      scale += e.deltaY * -0.01;
+      scale = Math.min(Math.max(0.5, scale), 3);
+      cube.style.transform = `scale(${scale}) rotateX(${currentY / 2}deg) rotateY(${currentX / 2}deg)`;
     });
 
-    // Hide the volume icon when mouse leaves the screen
-    window.addEventListener('mouseout', () => {
-      document.getElementById('unmuteIcon').classList.remove('show');
-    });
+    function detectFrontFace() {
+      const rect = cube.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const angleX = Math.atan2(centerY - window.innerHeight / 2, centerX - window.innerWidth / 2) * 180 / Math.PI;
+      const angleY = Math.atan2(centerY - window.innerHeight / 2, centerX - window.innerWidth / 2) * 180 / Math.PI;
+      if (angleX > -45 && angleX < 45 && angleY > -45 && angleY < 45) {
+        playVideoOnFace('front');
+      } else if (angleX > 135 || angleX < -135) {
+        playVideoOnFace('back');
+      } else if (angleY > 45 && angleY < 135) {
+        playVideoOnFace('top');
+      } else if (angleY > -135 && angleY < -45) {
+        playVideoOnFace('bottom');
+      } else if (angleX > 45 && angleX < 135) {
+        playVideoOnFace('left');
+      } else if (angleX > -135 && angleX < -45) {
+        playVideoOnFace('right');
+      }
+    }
+
+    setInterval(detectFrontFace, 100);
   </script>
 </body>
 </html>
