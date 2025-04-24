@@ -19,12 +19,12 @@
 </head>
 <body>
   <div class="cube" id="cube">
-    <div class="face front"><video id="front" muted loop><source src="https://archive.org/download/SampleVideo1280x7205mb/SampleVideo_1280x720_5mb.mp4" type="video/mp4"></video></div>
-    <div class="face back"><video id="back" muted loop><source src="https://archive.org/download/SampleVideo1280x7205mb/SampleVideo_1280x720_5mb.mp4" type="video/mp4"></video></div>
-    <div class="face left"><video id="left" muted loop><source src="https://archive.org/download/SampleVideo1280x7205mb/SampleVideo_1280x720_5mb.mp4" type="video/mp4"></video></div>
-    <div class="face right"><video id="right" muted loop><source src="https://archive.org/download/SampleVideo1280x7205mb/SampleVideo_1280x720_5mb.mp4" type="video/mp4"></video></div>
-    <div class="face top"><video id="top" muted loop><source src="https://archive.org/download/SampleVideo1280x7205mb/SampleVideo_1280x720_5mb.mp4" type="video/mp4"></video></div>
-    <div class="face bottom"><video id="bottom" muted loop><source src="https://archive.org/download/SampleVideo1280x7205mb/SampleVideo_1280x720_5mb.mp4" type="video/mp4"></video></div>
+    <div class="face front"><video id="front" muted loop><source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4"></video></div>
+    <div class="face back"><video id="back" muted loop><source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4"></video></div>
+    <div class="face left"><video id="left" muted loop><source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4"></video></div>
+    <div class="face right"><video id="right" muted loop><source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4"></video></div>
+    <div class="face top"><video id="top" muted loop><source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4"></video></div>
+    <div class="face bottom"><video id="bottom" muted loop><source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4"></video></div>
   </div>
 
   <script>
@@ -79,35 +79,27 @@
       }
     }
 
-    // Handle right-click (start "throwing" the cube)
-    window.addEventListener('contextmenu', (e) => {
-      e.preventDefault();
-      isThrowing = true;
-
-      // Calculate the speed based on the mouse movement
-      throwSpeedX = (e.clientX - window.innerWidth / 2) / 10;
-      throwSpeedY = (e.clientY - window.innerHeight / 2) / 10;
-    });
-
-    // Drag the cube using mouse (rotate along X and Y axes)
-    cube.addEventListener('mousedown', (e) => {
-      if (e.button !== 2) return; // Only allow right-click to throw
-      isDragging = true;
-      startX = e.clientX - currentX;
-      startY = e.clientY - currentY;
-      e.preventDefault();
+    // Handle Shift + Click (start "throwing" the cube)
+    window.addEventListener('mousedown', (e) => {
+      if (e.shiftKey) {
+        isThrowing = true;
+        startX = e.clientX - currentX;
+        startY = e.clientY - currentY;
+        e.preventDefault();
+      }
     });
 
     window.addEventListener('mousemove', (e) => {
-      if (isDragging) {
+      if (isThrowing) {
         currentX = e.clientX - startX;
         currentY = e.clientY - startY;
-        cube.style.transform = `rotateX(${currentY / 2}deg) rotateY(${currentX / 2}deg)`;
+        cube.style.left = `${currentX}px`;
+        cube.style.top = `${currentY}px`;
       }
     });
 
     window.addEventListener('mouseup', () => {
-      isDragging = false;
+      isThrowing = false;
     });
 
     window.addEventListener('wheel', (e) => {
@@ -121,8 +113,6 @@
       const rect = cube.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
-      const angleX = currentY / 2; // Rotate along the X-axis
-      const angleY = currentX / 2; // Rotate along the Y-axis
 
       let closestFace = null;
       let maxDotProduct = -Infinity;
