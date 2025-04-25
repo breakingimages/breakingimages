@@ -26,9 +26,11 @@
 
     .cube {
       position: relative;
+      width: 200px;
+      height: 200px;
       transform-style: preserve-3d;
       transform: rotateX(0deg) rotateY(0deg);
-      transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+      transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     .face {
@@ -56,57 +58,41 @@
       opacity: 0.05;
       pointer-events: none;
     }
+
+    .front  { transform: rotateY(  0deg) translateZ(100px); }
+    .back   { transform: rotateY(180deg) translateZ(100px); }
+    .right  { transform: rotateY( 90deg) translateZ(100px); }
+    .left   { transform: rotateY(-90deg) translateZ(100px); }
+    .top    { transform: rotateX( 90deg) translateZ(100px); }
+    .bottom { transform: rotateX(-90deg) translateZ(100px); }
   </style>
 </head>
 <body>
   <div class="scene" id="scene">
     <div class="cube" id="cube">
-      <!-- Faces will be added dynamically -->
+      <div class="face front">FRONT</div>
+      <div class="face back">BACK</div>
+      <div class="face right">RIGHT</div>
+      <div class="face left">LEFT</div>
+      <div class="face top">TOP</div>
+      <div class="face bottom">BOTTOM</div>
     </div>
   </div>
 
   <script>
     const cube = document.getElementById('cube');
-    const scene = document.getElementById('scene');
     let rotationX = 0;
     let rotationY = 0;
     let cubeSize = 200;
 
-    // Create cube faces dynamically for scalability
-    const faces = [
-      { name: 'front', transform: 'rotateY(0deg) translateZ(Z)' },
-      { name: 'back', transform: 'rotateY(180deg) translateZ(Z)' },
-      { name: 'right', transform: 'rotateY(90deg) translateZ(Z)' },
-      { name: 'left', transform: 'rotateY(-90deg) translateZ(Z)' },
-      { name: 'top', transform: 'rotateX(90deg) translateZ(Z)' },
-      { name: 'bottom', transform: 'rotateX(-90deg) translateZ(Z)' }
-    ];
-
-    function createFaces() {
-      cube.innerHTML = '';
-      cube.style.width = cube.style.height = cubeSize + 'px';
-
-      faces.forEach(face => {
-        const div = document.createElement('div');
-        div.className = 'face ' + face.name;
-        div.textContent = face.name.toUpperCase();
-        div.style.width = div.style.height = cubeSize + 'px';
-        div.style.transform = face.transform.replace('Z', cubeSize / 2 + 'px');
-        cube.appendChild(div);
-      });
-    }
-
-    createFaces();
-
-    // Drag logic with rotation snapping
-    let dragging = false;
     let startX = 0;
     let startY = 0;
+    let dragging = false;
 
     document.addEventListener('mousedown', (e) => {
-      dragging = true;
       startX = e.clientX;
       startY = e.clientY;
+      dragging = true;
     });
 
     document.addEventListener('mouseup', (e) => {
@@ -144,7 +130,7 @@
       const delta = Math.sign(e.deltaY);
       cubeSize -= delta * 10;
       cubeSize = Math.max(100, Math.min(cubeSize, 400)); // Clamp size
-      createFaces();
+      cube.style.width = cube.style.height = cubeSize + 'px';
       cube.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
     }, { passive: false });
   </script>
