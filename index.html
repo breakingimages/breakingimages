@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Animated Cube Spin</title>
+  <title>Cyber 3D Cube</title>
   <style>
-    body, html {
+    html, body {
       margin: 0;
       height: 100%;
       overflow: hidden;
@@ -16,24 +16,17 @@
     }
 
     .scene {
-      width: 400px;
-      height: 400px;
-      perspective: 1000px;
+      perspective: 1200px;
     }
 
     .cube {
-      width: 200px;
-      height: 200px;
       position: relative;
       transform-style: preserve-3d;
-      transform: rotateX(0deg) rotateY(0deg);
-      transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+      transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     .face {
       position: absolute;
-      width: 200px;
-      height: 200px;
       background: rgba(0, 255, 0, 0.1);
       border: 2px solid #00ff00;
       box-shadow: 0 0 20px #00ff00;
@@ -46,19 +39,12 @@
       box-sizing: border-box;
     }
 
-    .front  { transform: rotateY(0deg) translateZ(100px); }
-    .back   { transform: rotateY(180deg) translateZ(100px); }
-    .right  { transform: rotateY(90deg) translateZ(100px); }
-    .left   { transform: rotateY(-90deg) translateZ(100px); }
-    .top    { transform: rotateX(90deg) translateZ(100px); }
-    .bottom { transform: rotateX(-90deg) translateZ(100px); }
-
     .face::before {
       content: "";
       position: absolute;
       width: 100%;
       height: 100%;
-      background-image: linear-gradient(#00ff00 1px, transparent 1px), 
+      background-image: linear-gradient(#00ff00 1px, transparent 1px),
                         linear-gradient(to right, #00ff00 1px, transparent 1px);
       background-size: 20px 20px;
       opacity: 0.05;
@@ -67,30 +53,54 @@
   </style>
 </head>
 <body>
-  <div class="scene">
+  <div class="scene" id="scene">
     <div class="cube" id="cube">
-      <div class="face front">FRONT</div>
-      <div class="face back">BACK</div>
-      <div class="face right">RIGHT</div>
-      <div class="face left">LEFT</div>
-      <div class="face top">TOP</div>
-      <div class="face bottom">BOTTOM</div>
+      <!-- Faces will be added dynamically -->
     </div>
   </div>
 
   <script>
     const cube = document.getElementById('cube');
+    const scene = document.getElementById('scene');
     let rotationX = 0;
     let rotationY = 0;
+    let cubeSize = 200;
 
+    // Create cube faces dynamically for scalability
+    const faces = [
+      { name: 'front', transform: 'rotateY(0deg) translateZ(Z)' },
+      { name: 'back', transform: 'rotateY(180deg) translateZ(Z)' },
+      { name: 'right', transform: 'rotateY(90deg) translateZ(Z)' },
+      { name: 'left', transform: 'rotateY(-90deg) translateZ(Z)' },
+      { name: 'top', transform: 'rotateX(90deg) translateZ(Z)' },
+      { name: 'bottom', transform: 'rotateX(-90deg) translateZ(Z)' }
+    ];
+
+    function createFaces() {
+      cube.innerHTML = '';
+      cube.style.width = cube.style.height = cubeSize + 'px';
+
+      faces.forEach(face => {
+        const div = document.createElement('div');
+        div.className = 'face ' + face.name;
+        div.textContent = face.name.toUpperCase();
+        div.style.width = div.style.height = cubeSize + 'px';
+        div.style.transform = face.transform.replace('Z', cubeSize / 2 + 'px');
+        cube.appendChild(div);
+      });
+    }
+
+    createFaces();
+
+    // Drag logic with rotation snapping
+    let dragging = false;
     let startX = 0;
     let startY = 0;
-    let dragging = false;
 
     document.addEventListener('mousedown', (e) => {
+      dragging = true;
       startX = e.clientX;
       startY = e.clientY;
-      dragging = true;
     });
 
     document.addEventListener('mouseup', (e) => {
@@ -99,28 +109,38 @@
       const deltaX = e.clientX - startX;
       const deltaY = e.clientY - startY;
 
-      // Determine spin direction and magnitude
-      let steps = 4; // full spins
-      let snapAngle = 90;
+      const steps = 1 + Math.floor(Math.random() * 2); // 1 or 2 spins
+      const snap = 90;
 
       if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        // horizontal spin
-        let direction = deltaX > 0 ? 1 : -1;
-        rotationY += snapAngle * (steps + 1) * direction;
+        // Horizontal spin
+        const direction = deltaX > 0 ? 1 : -1;
+        rotationY += direction * snap * steps;
       } else {
-        // vertical spin
-        let direction = deltaY > 0 ? 1 : -1;
-        rotationX += snapAngle * (steps + 1) * direction;
+        // Vertical spin
+        const direction = deltaY > 0 ? 1 : -1;
+        rotationX += direction * snap * steps;
       }
 
-      cube.style.transition = 'transform 1.2s cubic-bezier(0.22, 1, 0.36, 1)';
+      // Normalize to keep rotation aligned to 90°
+      rotationX = Math.round(rotationX / 90) * 90;
+      rotationY = Math.round(rotationY / 90) * 90;
+
       cube.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
       dragging = false;
     });
 
-    document.addEventListener('mouseleave', () => {
-      dragging = false;
-    });
+    document.addEventListener('mouseleave', () => dragging = false);
+
+    // Resize with mouse wheel
+    document.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const delta = Math.sign(e.deltaY);
+      cubeSize -= delta * 10;
+      cubeSize = Math.max(100, Math.min(cubeSize, 400)); // Clamp size
+      createFaces();
+      cube.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+    }, { passive: false });
   </script>
 </body>
 </html>
