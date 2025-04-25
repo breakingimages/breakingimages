@@ -61,7 +61,7 @@
     const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
     scene.add(cube);
 
-    // Position the camera
+    // Position the camera further back to fit the whole cube
     camera.position.z = 15;
 
     // Add terminal-like text to each face of the cube
@@ -109,20 +109,21 @@
       isDragging = false;
     });
 
-    // Handle mouse wheel for resizing
-    window.addEventListener('wheel', (e) => {
-      const zoomSpeed = 0.05;
-      cube.scale.x += e.deltaY * zoomSpeed;
-      cube.scale.y += e.deltaY * zoomSpeed;
-      cube.scale.z += e.deltaY * zoomSpeed;
-    });
-
     // Apply gravitational force (ensure text stays upright)
     function applyGravitationalForce() {
       const vector = new THREE.Vector3(0, 1, 0);
       cube.rotation.x = Math.round(cube.rotation.x / Math.PI) * Math.PI; // Snap to upright
       cube.rotation.y = Math.round(cube.rotation.y / Math.PI) * Math.PI; // Snap to upright
     }
+
+    // Resize renderer on window resize
+    window.addEventListener('resize', () => {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      renderer.setSize(width, height);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+    });
 
     // Render loop
     function animate() {
