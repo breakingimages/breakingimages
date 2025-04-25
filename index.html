@@ -98,10 +98,15 @@
     
     window.addEventListener('mousemove', (e) => {
       if (!isDragging) return;
+
       const deltaX = e.clientX - prevMousePos.x;
       const deltaY = e.clientY - prevMousePos.y;
+
+      // Apply rotation in both X and Y directions
       cube.rotation.y += deltaX * 0.005;
       cube.rotation.x += deltaY * 0.005;
+
+      // Update previous mouse position
       prevMousePos = { x: e.clientX, y: e.clientY };
     });
     
