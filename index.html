@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Cyber 3D Cube</title>
+  <title>Animated Cube Spin</title>
   <style>
     body, html {
       margin: 0;
@@ -16,24 +16,24 @@
     }
 
     .scene {
-      width: 300px;
-      height: 300px;
+      width: 400px;
+      height: 400px;
       perspective: 1000px;
     }
 
     .cube {
-      width: 100%;
-      height: 100%;
+      width: 200px;
+      height: 200px;
       position: relative;
       transform-style: preserve-3d;
-      transform: rotateX(-20deg) rotateY(20deg);
-      transition: transform 0.1s ease-out;
+      transform: rotateX(0deg) rotateY(0deg);
+      transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     .face {
       position: absolute;
-      width: 300px;
-      height: 300px;
+      width: 200px;
+      height: 200px;
       background: rgba(0, 255, 0, 0.1);
       border: 2px solid #00ff00;
       box-shadow: 0 0 20px #00ff00;
@@ -41,17 +41,17 @@
       align-items: center;
       justify-content: center;
       color: #00ff00;
-      font-size: 2em;
+      font-size: 1.5em;
       text-shadow: 0 0 5px #00ff00;
       box-sizing: border-box;
     }
 
-    .front  { transform: rotateY(0deg) translateZ(150px); }
-    .back   { transform: rotateY(180deg) translateZ(150px); }
-    .right  { transform: rotateY(90deg) translateZ(150px); }
-    .left   { transform: rotateY(-90deg) translateZ(150px); }
-    .top    { transform: rotateX(90deg) translateZ(150px); }
-    .bottom { transform: rotateX(-90deg) translateZ(150px); }
+    .front  { transform: rotateY(0deg) translateZ(100px); }
+    .back   { transform: rotateY(180deg) translateZ(100px); }
+    .right  { transform: rotateY(90deg) translateZ(100px); }
+    .left   { transform: rotateY(-90deg) translateZ(100px); }
+    .top    { transform: rotateX(90deg) translateZ(100px); }
+    .bottom { transform: rotateX(-90deg) translateZ(100px); }
 
     .face::before {
       content: "";
@@ -60,7 +60,7 @@
       height: 100%;
       background-image: linear-gradient(#00ff00 1px, transparent 1px), 
                         linear-gradient(to right, #00ff00 1px, transparent 1px);
-      background-size: 30px 30px;
+      background-size: 20px 20px;
       opacity: 0.05;
       pointer-events: none;
     }
@@ -80,37 +80,46 @@
 
   <script>
     const cube = document.getElementById('cube');
-    let isDragging = false;
-    let previousX, previousY;
-    let rotationX = -20;
-    let rotationY = 20;
+    let rotationX = 0;
+    let rotationY = 0;
+
+    let startX = 0;
+    let startY = 0;
+    let dragging = false;
 
     document.addEventListener('mousedown', (e) => {
-      isDragging = true;
-      previousX = e.clientX;
-      previousY = e.clientY;
+      startX = e.clientX;
+      startY = e.clientY;
+      dragging = true;
     });
 
-    document.addEventListener('mousemove', (e) => {
-      if (!isDragging) return;
+    document.addEventListener('mouseup', (e) => {
+      if (!dragging) return;
 
-      const deltaX = e.clientX - previousX;
-      const deltaY = e.clientY - previousY;
-      rotationY += deltaX * 0.5;
-      rotationX -= deltaY * 0.5;
+      const deltaX = e.clientX - startX;
+      const deltaY = e.clientY - startY;
 
+      // Determine spin direction and magnitude
+      let steps = 4; // full spins
+      let snapAngle = 90;
+
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // horizontal spin
+        let direction = deltaX > 0 ? 1 : -1;
+        rotationY += snapAngle * (steps + 1) * direction;
+      } else {
+        // vertical spin
+        let direction = deltaY > 0 ? 1 : -1;
+        rotationX += snapAngle * (steps + 1) * direction;
+      }
+
+      cube.style.transition = 'transform 1.2s cubic-bezier(0.22, 1, 0.36, 1)';
       cube.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
-
-      previousX = e.clientX;
-      previousY = e.clientY;
-    });
-
-    document.addEventListener('mouseup', () => {
-      isDragging = false;
+      dragging = false;
     });
 
     document.addEventListener('mouseleave', () => {
-      isDragging = false;
+      dragging = false;
     });
   </script>
 </body>
