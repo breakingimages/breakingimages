@@ -89,6 +89,19 @@
     let startY = 0;
     let dragging = false;
 
+    // Ensure that the cube size is adjusted to fit within the scene bounds
+    function adjustCubeSize() {
+      const sceneWidth = window.innerWidth;
+      const sceneHeight = window.innerHeight;
+
+      // Maintain a 3D aspect ratio for the cube to ensure it fits within the scene
+      const maxSize = Math.min(sceneWidth, sceneHeight) * 0.4; // Cube size shouldn't exceed 40% of the viewport
+      cubeSize = Math.min(cubeSize, maxSize);
+      cube.style.width = cube.style.height = cubeSize + 'px';
+    }
+
+    window.addEventListener('resize', adjustCubeSize);
+
     document.addEventListener('mousedown', (e) => {
       startX = e.clientX;
       startY = e.clientY;
@@ -130,9 +143,12 @@
       const delta = Math.sign(e.deltaY);
       cubeSize -= delta * 10;
       cubeSize = Math.max(100, Math.min(cubeSize, 400)); // Clamp size
-      cube.style.width = cube.style.height = cubeSize + 'px';
+      adjustCubeSize(); // Recalculate size
       cube.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
     }, { passive: false });
+
+    // Initialize cube size on first load
+    adjustCubeSize();
   </script>
 </body>
 </html>
