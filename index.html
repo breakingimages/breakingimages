@@ -16,25 +16,20 @@
 
     header {
       position: fixed;
-      left: 0;
       top: 0;
-      bottom: 0;
-      width: 120px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #000;
+      left: 0;
       z-index: 10;
+      padding: 10px;
     }
 
     header img {
-      max-width: 100%;
+      width: 168px; /* 40% larger than the original 120px */
       height: auto;
     }
 
     .carousel {
-      margin-left: 120px;
       height: 100vh;
+      width: 100vw;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -59,21 +54,21 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      font-size: 3rem;
+      font-size: 2.5rem;
       color: #fff;
       background: rgba(0,0,0,0.5);
       border: none;
-      padding: 0.5rem 1rem;
+      padding: 0.5rem;
       cursor: pointer;
       z-index: 5;
     }
 
     .arrow.left {
-      left: -60px;
+      left: calc(50% - 37.5vw - 40px); /* Just outside the video container */
     }
 
     .arrow.right {
-      right: -60px;
+      right: calc(50% - 37.5vw - 40px);
     }
   </style>
 </head>
@@ -102,7 +97,7 @@
     const container = document.getElementById('videoContainer');
 
     function loadVideo(index) {
-      container.innerHTML = ''; // Clear current iframe
+      container.innerHTML = '';
       const iframe = document.createElement('iframe');
       iframe.src = `https://www.youtube.com/embed/${videoIds[index]}?autoplay=1&mute=1&controls=0&rel=0&playsinline=1`;
       iframe.allow = 'autoplay; encrypted-media';
@@ -116,7 +111,6 @@
       loadVideo(currentIndex);
     }
 
-    // Load the initial video
     loadVideo(currentIndex);
   </script>
 
