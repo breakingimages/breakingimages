@@ -103,8 +103,8 @@
       const deltaY = e.clientY - prevMousePos.y;
 
       // Apply rotation in both X and Y directions
-      cube.rotation.y += deltaX * 0.005;
-      cube.rotation.x += deltaY * 0.005;
+      cube.rotation.y += deltaX * 0.005; // Horizontal movement (Y-axis rotation)
+      cube.rotation.x += deltaY * 0.005; // Vertical movement (X-axis rotation)
 
       // Update previous mouse position
       prevMousePos = { x: e.clientX, y: e.clientY };
@@ -116,6 +116,7 @@
 
     // Apply gravitational force (ensure text stays upright)
     function applyGravitationalForce() {
+      // Force cube to snap to upright positions
       cube.rotation.x = Math.round(cube.rotation.x / Math.PI) * Math.PI; // Snap to upright
       cube.rotation.y = Math.round(cube.rotation.y / Math.PI) * Math.PI; // Snap to upright
     }
