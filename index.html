@@ -16,19 +16,6 @@
       background-size: 120px auto;
     }
 
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 10;
-      padding: 10px;
-    }
-
-    header img {
-      width: 168px; /* 40% larger than original */
-      height: auto;
-    }
-
     .carousel {
       height: 100vh;
       width: 100vw;
@@ -61,30 +48,26 @@
       color: #fff;
       background: rgba(0,0,0,0.6);
       border: none;
-      padding: 0.5rem;
+      padding: 0.5rem 1rem;
       cursor: pointer;
       z-index: 2;
     }
 
     .arrow.left {
-      right: calc(100% + 10px);
+      left: calc(50% - 37.5vw - 60px); /* outside the left edge of video container */
     }
 
     .arrow.right {
-      left: calc(100% + 10px);
+      right: calc(50% - 37.5vw - 60px); /* outside the right edge of video container */
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExN2M0Z2NvNjlkaXB5M3ZubXl6bjJzMTk1ZTZ0emRkbDM4b24zZ3RnYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/C5vR7fyscDw5iGew4I/giphy.gif" alt="Header GIF">
-  </header>
-
   <div class="carousel">
-    <div class="arrow left" onclick="changeVideo(-1)">&#9664;</div>
+    <button class="arrow left" onclick="changeVideo(-1)">&#9664;</button>
     <div class="video-container" id="videoContainer"></div>
-    <div class="arrow right" onclick="changeVideo(1)">&#9654;</div>
+    <button class="arrow right" onclick="changeVideo(1)">&#9654;</button>
   </div>
 
   <script>
