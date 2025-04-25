@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>YouTube Full-Screen Scroll</title>
+  <title>YouTube Carousel</title>
   <style>
     html, body {
       margin: 0;
@@ -10,42 +10,70 @@
       background-color: #000;
       color: #fff;
       font-family: sans-serif;
+      height: 100vh;
+      overflow: hidden;
     }
 
     header {
-      text-align: center;
-      padding: 10px 0;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #000;
+      z-index: 10;
     }
+
     header img {
       max-width: 100%;
       height: auto;
-      display: inline-block;
     }
 
-    .video-list {
+    .carousel {
+      margin-left: 120px;
+      height: 100vh;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      gap: 0.25in; /* quarter-inch between blocks */
-      scroll-snap-type: y mandatory;
+      justify-content: center;
+      position: relative;
     }
 
     .video-container {
       width: 75vw;
       height: 75vh;
-      position: relative;
       background: #111;
       overflow: hidden;
-      scroll-snap-align: start;
+      position: relative;
     }
 
     .video-container iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
       width: 100%;
       height: 100%;
       border: none;
+    }
+
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 3rem;
+      color: #fff;
+      background: rgba(0,0,0,0.5);
+      border: none;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      z-index: 5;
+    }
+
+    .arrow.left {
+      left: -60px;
+    }
+
+    .arrow.right {
+      right: -60px;
     }
   </style>
 </head>
@@ -55,31 +83,41 @@
     <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExN2M0Z2NvNjlkaXB5M3ZubXl6bjJzMTk1ZTZ0emRkbDM4b24zZ3RnYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/C5vR7fyscDw5iGew4I/giphy.gif" alt="Header GIF">
   </header>
 
-  <div class="video-list">
-    <div class="video-container" data-id="hrgcRAryUaY"></div>
-    <div class="video-container" data-id="9SBnKTBPpME"></div>
-    <div class="video-container" data-id="B2CpcHIxaOw"></div>
-    <div class="video-container" data-id="dKlpKE7x7mY"></div>
-    <div class="video-container" data-id="eMiwRjiQpV4"></div>
-    <div class="video-container" data-id="7r_3tZ0SzDc"></div>
+  <div class="carousel">
+    <button class="arrow left" onclick="changeVideo(-1)">&#9664;</button>
+    <div class="video-container" id="videoContainer"></div>
+    <button class="arrow right" onclick="changeVideo(1)">&#9654;</button>
   </div>
 
   <script>
-    const containers = document.querySelectorAll('.video-container');
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting && !entry.target.dataset.loaded) {
-          const id = entry.target.dataset.id;
-          const iframe = document.createElement('iframe');
-          iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&controls=0&rel=0&playsinline=1`;
-          iframe.allow = 'autoplay; encrypted-media';
-          entry.target.appendChild(iframe);
-          entry.target.dataset.loaded = 'true';
-        }
-      });
-    }, { threshold: 0.75 });
+    const videoIds = [
+      "hrgcRAryUaY",
+      "9SBnKTBPpME",
+      "B2CpcHIxaOw",
+      "dKlpKE7x7mY",
+      "eMiwRjiQpV4",
+      "7r_3tZ0SzDc"
+    ];
+    let currentIndex = 0;
+    const container = document.getElementById('videoContainer');
 
-    containers.forEach(c => obs.observe(c));
+    function loadVideo(index) {
+      container.innerHTML = ''; // Clear current iframe
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube.com/embed/${videoIds[index]}?autoplay=1&mute=1&controls=0&rel=0&playsinline=1`;
+      iframe.allow = 'autoplay; encrypted-media';
+      container.appendChild(iframe);
+    }
+
+    function changeVideo(direction) {
+      currentIndex += direction;
+      if (currentIndex < 0) currentIndex = videoIds.length - 1;
+      if (currentIndex >= videoIds.length) currentIndex = 0;
+      loadVideo(currentIndex);
+    }
+
+    // Load the initial video
+    loadVideo(currentIndex);
   </script>
 
 </body>
