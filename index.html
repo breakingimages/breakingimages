@@ -7,11 +7,13 @@
     html, body {
       margin: 0;
       padding: 0;
-      background-color: #000;
-      color: #fff;
-      font-family: sans-serif;
       height: 100vh;
       overflow: hidden;
+      font-family: sans-serif;
+      background-color: #000;
+      background-image: url('https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExN2M0Z2NvNjlkaXB5M3ZubXl6bjJzMTk1ZTZ0emRkbDM4b24zZ3RnYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/C5vR7fyscDw5iGew4I/giphy.gif');
+      background-repeat: repeat;
+      background-size: 120px auto;
     }
 
     header {
@@ -23,7 +25,7 @@
     }
 
     header img {
-      width: 168px; /* 40% larger than the original 120px */
+      width: 168px; /* 40% larger than original */
       height: auto;
     }
 
@@ -42,6 +44,7 @@
       background: #111;
       overflow: hidden;
       position: relative;
+      z-index: 1;
     }
 
     .video-container iframe {
@@ -56,19 +59,19 @@
       transform: translateY(-50%);
       font-size: 2.5rem;
       color: #fff;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.6);
       border: none;
       padding: 0.5rem;
       cursor: pointer;
-      z-index: 5;
+      z-index: 2;
     }
 
     .arrow.left {
-      left: calc(50% - 37.5vw - 40px); /* Just outside the video container */
+      right: calc(100% + 10px);
     }
 
     .arrow.right {
-      right: calc(50% - 37.5vw - 40px);
+      left: calc(100% + 10px);
     }
   </style>
 </head>
@@ -79,9 +82,9 @@
   </header>
 
   <div class="carousel">
-    <button class="arrow left" onclick="changeVideo(-1)">&#9664;</button>
+    <div class="arrow left" onclick="changeVideo(-1)">&#9664;</div>
     <div class="video-container" id="videoContainer"></div>
-    <button class="arrow right" onclick="changeVideo(1)">&#9654;</button>
+    <div class="arrow right" onclick="changeVideo(1)">&#9654;</div>
   </div>
 
   <script>
