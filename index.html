@@ -2,155 +2,138 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Cyber 3D Cube</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Cube - Terminal Look</title>
   <style>
-    html, body {
+    body, html {
       margin: 0;
+      padding: 0;
       height: 100%;
+      background-color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       overflow: hidden;
-      background: radial-gradient(ellipse at center, #001100 0%, #000000 100%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: 'Courier New', Courier, monospace;
     }
 
-    .scene {
-      perspective: 1200px;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .cube {
+    #container {
+      width: 80vmin;
+      height: 80vmin;
       position: relative;
-      transform-style: preserve-3d;
-      transform: rotateX(0deg) rotateY(0deg);
-      width: 200px;
-      height: 200px;
-      transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    .face {
-      position: absolute;
-      background: rgba(0, 255, 0, 0.1);
-      border: 2px solid #00ff00;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #00ff00;
-      font-size: 1.5em;
-      text-shadow: 0 0 5px #00ff00;
-      box-sizing: border-box;
+    canvas {
+      display: block;
       width: 100%;
       height: 100%;
     }
 
-    .front  { transform: rotateY(  0deg) translateZ(100px); }
-    .back   { transform: rotateY(180deg) translateZ(100px); }
-    .right  { transform: rotateY( 90deg) translateZ(100px); }
-    .left   { transform: rotateY(-90deg) translateZ(100px); }
-    .top    { transform: rotateX( 90deg) translateZ(100px); }
-    .bottom { transform: rotateX(-90deg) translateZ(100px); }
-
-    /* Add green grid effect to each face */
-    .face::before {
-      content: "";
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background-image: linear-gradient(#00ff00 1px, transparent 1px),
-                        linear-gradient(to right, #00ff00 1px, transparent 1px);
-      background-size: 20px 20px;
-      opacity: 0.1;
-      pointer-events: none;
+    .terminal-text {
+      font-family: "Courier New", Courier, monospace;
+      color: #00FF00;
+      font-size: 20px;
+      text-align: center;
+      vertical-align: middle;
     }
   </style>
 </head>
 <body>
-  <div class="scene" id="scene">
-    <div class="cube" id="cube">
-      <div class="face front">FRONT</div>
-      <div class="face back">BACK</div>
-      <div class="face right">RIGHT</div>
-      <div class="face left">LEFT</div>
-      <div class="face top">TOP</div>
-      <div class="face bottom">BOTTOM</div>
-    </div>
-  </div>
 
+  <div id="container"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script>
-    const cube = document.getElementById('cube');
-    let rotationX = 0;
-    let rotationY = 0;
-    let cubeSize = 200;
+    // Set up scene, camera, and renderer
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('container').appendChild(renderer.domElement);
 
-    let startX = 0;
-    let startY = 0;
-    let dragging = false;
+    // Cube setup
+    const cubeSize = 5;
+    const cubeGeometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
+    const cubeMaterial = new THREE.MeshBasicMaterial({
+      color: 0x00FF00, 
+      wireframe: true
+    });
 
-    // Ensure cube fits within the viewport without getting cropped
-    function adjustCubeSize() {
-      const sceneWidth = window.innerWidth;
-      const sceneHeight = window.innerHeight;
+    const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+    scene.add(cube);
 
-      // Maintain a maximum size that fits in the viewport
-      const maxSize = Math.min(sceneWidth, sceneHeight) * 0.4; // Cube size shouldn't exceed 40% of the viewport
-      cubeSize = Math.min(cubeSize, maxSize);
-      cube.style.width = cube.style.height = cubeSize + 'px';
+    // Position the camera
+    camera.position.z = 15;
+
+    // Add terminal-like text to each face of the cube
+    const faces = ['Front', 'Back', 'Left', 'Right', 'Top', 'Bottom'];
+    faces.forEach((face, index) => {
+      const texture = new THREE.CanvasTexture(createTextCanvas(face));
+      const material = new THREE.MeshBasicMaterial({ map: texture });
+      cube.material[index] = material;
+    });
+
+    // Create a canvas to draw text for cube faces
+    function createTextCanvas(text) {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = 512;
+      canvas.height = 512;
+      ctx.fillStyle = 'black';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'green';
+      ctx.font = '48px Courier New';
+      ctx.fillText(text, canvas.width / 2 - ctx.measureText(text).width / 2, canvas.height / 2);
+      return canvas;
     }
 
-    window.addEventListener('resize', adjustCubeSize);
+    // Rotation variables
+    let isDragging = false;
+    let prevMousePos = { x: 0, y: 0 };
 
-    document.addEventListener('mousedown', (e) => {
-      startX = e.clientX;
-      startY = e.clientY;
-      dragging = true;
+    // Mouse event listeners for dragging
+    window.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      prevMousePos = { x: e.clientX, y: e.clientY };
+    });
+    
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const deltaX = e.clientX - prevMousePos.x;
+      const deltaY = e.clientY - prevMousePos.y;
+      cube.rotation.y += deltaX * 0.005;
+      cube.rotation.x += deltaY * 0.005;
+      prevMousePos = { x: e.clientX, y: e.clientY };
+    });
+    
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
     });
 
-    document.addEventListener('mouseup', (e) => {
-      if (!dragging) return;
-
-      const deltaX = e.clientX - startX;
-      const deltaY = e.clientY - startY;
-
-      const steps = 1 + Math.floor(Math.random() * 2); // 1 or 2 spins
-      const snap = 90;
-
-      if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        // Horizontal spin
-        const direction = deltaX > 0 ? 1 : -1;
-        rotationY += direction * snap * steps;
-      } else {
-        // Vertical spin
-        const direction = deltaY > 0 ? 1 : -1;
-        rotationX += direction * snap * steps;
-      }
-
-      // Normalize to keep rotation aligned to 90°
-      rotationX = Math.round(rotationX / 90) * 90;
-      rotationY = Math.round(rotationY / 90) * 90;
-
-      cube.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
-      dragging = false;
+    // Handle mouse wheel for resizing
+    window.addEventListener('wheel', (e) => {
+      const zoomSpeed = 0.05;
+      cube.scale.x += e.deltaY * zoomSpeed;
+      cube.scale.y += e.deltaY * zoomSpeed;
+      cube.scale.z += e.deltaY * zoomSpeed;
     });
 
-    document.addEventListener('mouseleave', () => dragging = false);
+    // Apply gravitational force (ensure text stays upright)
+    function applyGravitationalForce() {
+      const vector = new THREE.Vector3(0, 1, 0);
+      cube.rotation.x = Math.round(cube.rotation.x / Math.PI) * Math.PI; // Snap to upright
+      cube.rotation.y = Math.round(cube.rotation.y / Math.PI) * Math.PI; // Snap to upright
+    }
 
-    // Resize with mouse wheel
-    document.addEventListener('wheel', (e) => {
-      e.preventDefault();
-      const delta = Math.sign(e.deltaY);
-      cubeSize -= delta * 10;
-      cubeSize = Math.max(100, Math.min(cubeSize, 400)); // Clamp size
-      adjustCubeSize(); // Recalculate size
-      cube.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
-    }, { passive: false });
+    // Render loop
+    function animate() {
+      requestAnimationFrame(animate);
+      applyGravitationalForce(); // Ensure upright text
+      renderer.render(scene, camera);
+    }
 
-    // Initialize cube size on first load
-    adjustCubeSize();
+    animate();
+
   </script>
+
 </body>
 </html>
