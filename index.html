@@ -1,145 +1,579 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>3D Cube - Terminal Look</title>
-  <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background-color: black;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-    }
 
-    #container {
-      width: 100%;
-      height: 100%;
-      position: relative;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Terminal Chat</title>
 
-    canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
+<style>
 
-    .terminal-text {
-      font-family: "Courier New", Courier, monospace;
-      color: #00FF00;
-      font-size: 20px;
-      text-align: center;
-      vertical-align: middle;
-    }
-  </style>
+  *{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+  }
+
+  html{
+    font-size:140%;
+  }
+
+  body{
+    background:#000;
+    color:#00ff88;
+    font-family:monospace;
+    height:100dvh;
+    overflow:hidden;
+  }
+
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.03),
+        rgba(255,255,255,0.03) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+    pointer-events:none;
+    z-index:999;
+  }
+
+  .layout{
+    display:flex;
+    height:100dvh;
+  }
+
+  .chat-section{
+    flex:0.9;
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+  }
+
+  #chat{
+    flex:1;
+    overflow-y:auto;
+    padding:20px;
+
+    /* ✅ HIDE SCROLLBAR (keeps functionality) */
+    scrollbar-width: none;        /* Firefox */
+    -ms-overflow-style: none;     /* IE / old Edge */
+  }
+
+  /* Chrome / Safari / Edge */
+  #chat::-webkit-scrollbar{
+    width:0px;
+    height:0px;
+    display:none;
+  }
+
+  .msg{
+    margin-bottom:10px;
+    word-break:break-word;
+    white-space:pre-wrap;
+    line-height:1.4;
+  }
+
+  .user{ color:#00ff88; }
+  .system{ color:#00ccff; }
+
+  #inputBar{
+    display:flex;
+    padding:16px 20px;
+    width:100%;
+    position:relative;
+  }
+
+  .prompt{
+    margin-right:10px;
+  }
+
+  .input-wrapper{
+    position:relative;
+    flex:1;
+    display:flex;
+    align-items:center;
+    padding-left:10px;
+  }
+
+  input{
+    flex:1;
+    background:transparent;
+    border:none;
+    outline:none;
+    color:#00ff88;
+    font:inherit;
+    caret-color: transparent;
+  }
+
+  .input-wrapper::before{
+    content:"█";
+    position:absolute;
+    left:0;
+    color:#00ff88;
+    animation:blink 1s infinite;
+    pointer-events:none;
+  }
+
+  .input-wrapper.typing::before{
+    opacity:0;
+  }
+
+  @keyframes blink{
+    50%{ opacity:0; }
+  }
+
+  #inputBar::before{
+    content:"";
+    position:fixed;
+    left:0;
+    bottom:72px;
+    width:100vw;
+    height:1px;
+    background:#00ff88;
+    pointer-events:none;
+    z-index:10;
+  }
+
+  .gif-panel{
+    width:420px;
+    border-left:1px solid #00ff88;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    transform: translateX(5);
+    transform: translateY(30);
+  }
+
+  .gif-box{
+    width:100%;
+    aspect-ratio:1 / 1;
+    border:1px solid #00ff88;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    box-shadow:0 0 20px #00ff88;
+    transform:translateX(60px);
+  }
+
+  .gif-box img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+  }
+
+  .bios-mode .gif-panel{
+    display:none;
+  }
+
+  .modal{
+    position:fixed;
+    inset:0;
+    background:#000;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:1000;
+  }
+
+  .modal-box{
+    text-align:center;
+    color:#00ff88;
+    font-family:monospace;
+    padding:22px 26px;
+    border:1px solid #00ff88;
+    box-shadow:0 0 12px rgba(0,255,136,0.35);
+    background:rgba(0,0,0,0.6);
+  }
+
+  .modal-box h1{
+    font-size:14px;
+    font-weight:normal;
+    opacity:0.75;
+    margin-bottom:14px;
+    letter-spacing:1px;
+  }
+
+  .modal-input-wrapper{
+    position:relative;
+    display:inline-block;
+  }
+
+  .modal-box input{
+    width:260px;
+    padding:10px;
+    background:transparent;
+    border:none;
+    border-bottom:1px solid #00ff88;
+    outline:none;
+    color:#00ff88;
+    font-family:monospace;
+    text-align:left;
+    caret-color: transparent;
+  }
+
+  .modal-input-wrapper::before{
+    content:"█";
+    position:absolute;
+    left:10px;
+    top:50%;
+    transform:translateY(-50%);
+    color:#00ff88;
+    animation:blink 1s infinite;
+    pointer-events:none;
+  }
+
+  .modal-input-wrapper.typing::before{
+    opacity:0;
+  }
+
+  .modal-box button{
+    margin-top:14px;
+    background:none;
+    border:none;
+    color:#00ff88;
+    cursor:pointer;
+    font-family:monospace;
+    opacity:0.75;
+  }
+
+  .modal-box button:hover{
+    opacity:1;
+  }
+
+  .boot-wipe{
+    position:fixed;
+    inset:0;
+    background:#000;
+    z-index:2000;
+    transform-origin:top;
+    animation:wipeDown 1.6s steps(6) forwards;
+  }
+
+  @keyframes wipeDown{
+    0%{ transform:scaleY(1); opacity:1; }
+    100%{ transform:scaleY(0); opacity:0; }
+  }
+
+  .scanlines{
+    position:fixed;
+    inset:0;
+    z-index:1999;
+    pointer-events:none;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        rgba(0,255,136,0.06),
+        rgba(0,255,136,0.06) 1px,
+        transparent 2px,
+        transparent 4px
+      );
+    mix-blend-mode:screen;
+    animation:scanMove 0.15s linear infinite;
+  }
+
+  @keyframes scanMove{
+    0% { transform:translateY(0); }
+    100% { transform:translateY(6px); }
+  }
+
+</style>
+
 </head>
-<body>
 
-  <div id="container"></div>
+<body class="bios-mode">
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script>
-    // Set up scene, camera, and renderer
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000); // Adjusted FOV
-    const renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.getElementById('container').appendChild(renderer.domElement);
+<!-- EVERYTHING BELOW IS EXACTLY YOUR ORIGINAL CODE -->
 
-    // Cube setup
-    const cubeSize = 5;
-    const cubeGeometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
-    const cubeMaterial = new THREE.MeshBasicMaterial({
-      color: 0x00FF00, 
-      wireframe: true
-    });
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <h1>ENTER USERNAME</h1>
 
-    const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-    scene.add(cube);
+    <div class="modal-input-wrapper" id="modalWrapper">
+      <input id="usernameInput" type="text" placeholder="username" />
+    </div>
 
-    // Position the camera farther back to fit the whole cube
-    camera.position.z = 15;
+    <button id="startBtn">START SESSION</button>
+  </div>
+</div>
 
-    // Add terminal-like text to each face of the cube
-    const faces = ['Front', 'Back', 'Left', 'Right', 'Top', 'Bottom'];
-    faces.forEach((face, index) => {
-      const texture = new THREE.CanvasTexture(createTextCanvas(face));
-      const material = new THREE.MeshBasicMaterial({ map: texture });
-      cube.material[index] = material;
-    });
+<div class="layout">
 
-    // Create a canvas to draw text for cube faces
-    function createTextCanvas(text) {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      canvas.width = 512;
-      canvas.height = 512;
-      ctx.fillStyle = 'black';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = 'green';
-      ctx.font = '48px Courier New';
-      ctx.fillText(text, canvas.width / 2 - ctx.measureText(text).width / 2, canvas.height / 2);
-      return canvas;
+  <div class="chat-section">
+
+    <div id="chat"></div>
+
+    <div id="inputBar">
+      <span class="prompt" id="prompt">guest$</span>
+
+      <div class="input-wrapper">
+        <input type="text" id="input" />
+      </div>
+    </div>
+
+  </div>
+
+  <div class="gif-panel">
+    <div class="gif-box">
+      <img id="gif"
+        src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExaHdkYjE3aWJuMTc5MTJta2VucGx3a3hjYnViN2Zqcm1hYm91ODRwZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Ox7hV1gYFrZamdbYlI/giphy.gif"
+      >
+    </div>
+  </div>
+
+</div>
+
+<script>
+const input = document.getElementById("input");
+const chat = document.getElementById("chat");
+const inputBar = document.getElementById("inputBar");
+const body = document.body;
+
+const modal = document.getElementById("modal");
+const usernameInput = document.getElementById("usernameInput");
+const startBtn = document.getElementById("startBtn");
+const prompt = document.getElementById("prompt");
+
+const inputWrapper = document.querySelector(".input-wrapper");
+const modalWrapper = document.getElementById("modalWrapper");
+
+let bootComplete = false;
+let username = "guest";
+
+inputBar.style.display = "none";
+input.disabled = true;
+
+input.addEventListener("input", () => {
+  if(input.value.length > 0){
+    inputWrapper.classList.add("typing");
+  } else {
+    inputWrapper.classList.remove("typing");
+  }
+});
+
+usernameInput.addEventListener("input", () => {
+  if(usernameInput.value.length > 0){
+    modalWrapper.classList.add("typing");
+  } else {
+    modalWrapper.classList.remove("typing");
+  }
+});
+
+input.addEventListener("keydown", (e) => {
+  if(e.key === "Enter"){
+    const text = input.value.trim();
+    if(!text) return;
+
+    addMessage("user", text);
+    runCommand(text);
+
+    input.value = "";
+    inputWrapper.classList.remove("typing");
+    input.focus();
+  }
+});
+
+const biosLines = [
+  "EX1T.US BIOS v2.1.4",
+  "Copyright (C) 1989-2026",
+  "",
+  "CPU: Intel Pentium II Detected",
+  "Memory Test: 65536K OK",
+  "",
+  "Detecting IDE Devices...",
+  "Primary Host ........ OK",
+  "Primary Client ......... OK",
+  "",
+  "Initializing Network Interface...",
+  "Connection Established",
+  "",
+  "Loading kernel modules...",
+  "Mounting filesystem...",
+  "",
+  "WARNING: Unauthorized access prohibited",
+  "",
+  "Press ENTER to continue"
+];
+
+let biosIndex = 0;
+
+function addMessage(type, text){
+  const msg = document.createElement("div");
+  msg.className = `msg ${type}`;
+
+  if(type === "user"){
+    msg.innerHTML = `<span class="user">${username}$</span> ${text}`;
+  } else {
+    msg.innerHTML = `<span class="system">system:</span> ${text}`;
+  }
+
+  chat.appendChild(msg);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function systemOutput(text){
+  addMessage("system", text);
+}
+
+function typeBIOSLine(){
+  if(biosIndex >= biosLines.length){
+    waitForEnter();
+    return;
+  }
+
+  const line = document.createElement("div");
+  line.className = "msg system";
+  chat.appendChild(line);
+
+  const text = biosLines[biosIndex];
+  let i = 0;
+
+  const interval = setInterval(() => {
+    line.innerHTML += text[i] || "";
+    i++;
+
+    chat.scrollTop = chat.scrollHeight;
+
+    if(i > text.length){
+      clearInterval(interval);
+      biosIndex++;
+      setTimeout(typeBIOSLine, 120);
     }
 
-    // Rotation variables
-    let isDragging = false;
-    let prevMousePos = { x: 0, y: 0 };
+  }, 20);
+}
 
-    // Mouse event listeners for dragging
-    window.addEventListener('mousedown', (e) => {
-      isDragging = true;
-      prevMousePos = { x: e.clientX, y: e.clientY };
-    });
-    
-    window.addEventListener('mousemove', (e) => {
-      if (!isDragging) return;
-
-      const deltaX = e.clientX - prevMousePos.x;
-      const deltaY = e.clientY - prevMousePos.y;
-
-      // Apply rotation in both X and Y directions
-      cube.rotation.y += deltaX * 0.005; // Horizontal movement (Y-axis rotation)
-      cube.rotation.x += deltaY * 0.005; // Vertical movement (X-axis rotation)
-
-      // Update previous mouse position
-      prevMousePos = { x: e.clientX, y: e.clientY };
-    });
-    
-    window.addEventListener('mouseup', () => {
-      isDragging = false;
-    });
-
-    // Apply gravitational force (ensure text stays upright)
-    function applyGravitationalForce() {
-      // Force cube to snap to upright positions
-      cube.rotation.x = Math.round(cube.rotation.x / Math.PI) * Math.PI; // Snap to upright
-      cube.rotation.y = Math.round(cube.rotation.y / Math.PI) * Math.PI; // Snap to upright
+function waitForEnter(){
+  document.addEventListener("keydown", (e) => {
+    if(e.key === "Enter"){
+      bootTerminal();
     }
+  }, { once:true });
+}
 
-    // Resize renderer on window resize
-    window.addEventListener('resize', () => {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-      renderer.setSize(width, height);
-      camera.aspect = width / height;
-      camera.updateProjectionMatrix();
-    });
+function bootTerminal(){
+  if(bootComplete) return;
+  bootComplete = true;
 
-    // Render loop
-    function animate() {
-      requestAnimationFrame(animate);
-      applyGravitationalForce(); // Ensure upright text
-      renderer.render(scene, camera);
+  body.classList.remove("bios-mode");
+  chat.innerHTML = "";
+
+  inputBar.style.display = "flex";
+  input.disabled = false;
+
+  openUsernameModal();
+}
+
+function openUsernameModal(){
+  modal.style.display = "flex";
+
+  setTimeout(() => {
+    usernameInput.focus();
+    usernameInput.setSelectionRange(
+      usernameInput.value.length,
+      usernameInput.value.length
+    );
+  }, 50);
+
+  function start(){
+    const val = usernameInput.value.trim();
+    username = val || "guest";
+
+    prompt.innerText = username + "$";
+
+    modal.style.display = "none";
+
+    const scan = document.createElement("div");
+    scan.className = "scanlines";
+    document.body.appendChild(scan);
+
+    const wipe = document.createElement("div");
+    wipe.className = "boot-wipe";
+    document.body.appendChild(wipe);
+
+    setTimeout(() => {
+      wipe.remove();
+      scan.remove();
+      input.focus();
+    }, 900);
+  }
+
+  startBtn.onclick = start;
+
+  usernameInput.onkeydown = (e) => {
+    if(e.key === "Enter"){
+      start();
     }
+  };
+}
 
-    animate();
+function runCommand(text){
+  const cmd = text.toLowerCase();
 
-  </script>
+  if(cmd === "hello"){
+    setTimeout(() => systemOutput("DO YOU FEAR DEATH?"), 800);
+  }
+  else if(cmd === "no"){
+    setTimeout(() => systemOutput("SHOULD YOU?"), 800);
+  }
+  else if(cmd === "i don't think so"){
+    systemOutput("THE EXIT REQUIRES CERTAINTY");
+    setTimeout(() => systemOutput("ARE YOU CERTAIN?"), 800)
+  }
+  else if(cmd === "yes"){
+    setTimeout(() => systemOutput("DO YOU FIND COMFORT IN INEVITABILITIES?"), 800)
+  }
+  else if(cmd === "i do"){
+    setTimeout(() => systemOutput("HAVE YOU EVER CONTEMPLATED SUICIDE?"), 800)
+  }
+  else if(cmd === "in the past"){
+    setTimeout(() => systemOutput("HAS NOTHING CHANGED?"), 800)
+  }
+  else if(cmd === "a lot has"){
+    setTimeout(() => systemOutput("FOR THE BETTER?"), 800)
+  }
+  else if(cmd === "yeah"){
+    setTimeout(() => systemOutput("FOR THE WORSE?"), 800)
+  }
+  else if(cmd === "also"){
+    setTimeout(() => systemOutput("HAVE YOU BEEN A VOYEUR TO LIFE?"), 800)
+  }
+  else if(cmd === "at times"){
+    setTimeout(() => systemOutput("ARE YOU READY TO PARTICIPATE?"), 800)
+  }
+  else if(cmd === "in what?"){
+    setTimeout(() => systemOutput("DO YOU BELIEVE IN GHOSTS?"), 1600)
+  }
+  else if(cmd === "not really"){
+    setTimeout(() => systemOutput("SPIRITS PERSIST THROUGH TECHNOLOGY"), 800)
+  }
+  else if(cmd === "is that what you are?"){
+    setTimeout(() => systemOutput("DOCUMENTATION TRANSCENDS"), 800)
+  }
+  else if(cmd === "are you a ghost?"){
+    setTimeout(() => systemOutput("176.35.241.182"), 2500)
+  }
+  else if(cmd === "clear"){
+    chat.innerHTML = "";
+  }
+  else if(cmd === "time"){
+    addMessage("system", new Date().toString());
+  }
+  else if(cmd === "help"){
+    addMessage("system", "commands: hello, no, i don't think so, yes, i do, in the past, a lot has, yeah, also, at times, in what?, not really, is that what you are?, are you a ghost?, clear, time");
+  }
+}
+
+typeBIOSLine();
+</script>
 
 </body>
 </html>
