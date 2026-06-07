@@ -545,14 +545,14 @@ function runCommand(text){
   else if(cmd === "at times"){
     setTimeout(() => systemOutput("ARE YOU READY TO PARTICIPATE?"), 800)
   }
-  else if(cmd === "in what?"){
+  else if(cmd === "in?"){
+    setTimeout(() => systemOutput("TRANSCENDANCE"), 800)
+  }
+  else if(cmd === "what does that mean?"){
     setTimeout(() => systemOutput("DO YOU BELIEVE IN GHOSTS?"), 1600)
   }
-  else if(cmd === "not really"){
-    setTimeout(() => systemOutput("SPIRITS PERSIST THROUGH TECHNOLOGY"), 800)
-  }
   else if(cmd === "is that what you are?"){
-    setTimeout(() => systemOutput("DOCUMENTATION TRANSCENDS"), 800)
+    setTimeout(() => systemOutput("SPIRITS PERSIST THROUGH DOCUMENTATION"), 800)
   }
 
   else if(cmd === "are you a ghost?"){
@@ -573,7 +573,7 @@ function runCommand(text){
     addMessage("system", new Date().toString());
   }
   else if(cmd === "help"){
-    addMessage("system", "commands: hello, no, i don't think so, yes, i do, in the past, a lot has, yeah, also, at times, in what?, not really, is that what you are?, are you a ghost?, clear, time");
+    addMessage("system", "commands: hello, no, i don't think so, yes, i do, in the past, a lot has, yeah, also, at times, in?, what does that mean?, is that what you are?, are you a ghost?, clear, time");
   }
 }
 
